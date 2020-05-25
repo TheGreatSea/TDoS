@@ -1,6 +1,10 @@
+body{
+    background-color: #003153;
+    color: white;
+}
 
 .links:hover{
-    color: blue;
+    color: yellow;
 }
 
 .links{

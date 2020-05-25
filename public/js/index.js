@@ -1,5 +1,40 @@
-const API_TOKEN = '2abbf7c3-245b-404f-9473-ade729ed4653';
+const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
 
+function init(){
+    let url = `/users/validate-token`;
+    let settings = {
+        method : 'GET',
+        headers : { 
+            sessiontoken : localStorage.getItem('token'),
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            document.querySelector('#section1').innerHTML = `
+            <div> 
+            <p>${responseJSON.userName}</p>
+            <p>${responseJSON.id}</p>
+            </div>
+            `;
+            console.log(responseJSON);
+        })
+        .catch( err => {
+            window.alert("Session expired. Redirecting");
+            localStorage.removeItem('token');
+            window.location.href = "/user_entry.html";
+        });
+}
+
+init();
+
+/*
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
@@ -10,14 +45,6 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function init(){
-    let account_user = getParameterByName('userName');
-    console.log(account_user);
-}
-
-init();
-
-/*
 function getBookmarks(){
     let url = '/bookmarks';
     let settings = {

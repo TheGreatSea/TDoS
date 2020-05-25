@@ -114,6 +114,17 @@ app.post('/users/changePassword',jsonParser, (req, res) =>{
         });
 });
 
+app.get('/users/validate-token',(req, res) =>{
+    const{ sessiontoken} = req.headers;
+    jwt.verify(sessiontoken, SECRET_TOKEN, (err, decoded)=>{
+        if(err){
+            res.statusMessage = "Session expired";
+            return res.status(400).end();
+        }
+        return res.status(200).json(decoded);
+    });
+});
+
 app.post('/users/login',jsonParser, (req, res) =>{
     console.log("Login user");
     console.log("Body ", req.body);
@@ -127,23 +138,23 @@ app.post('/users/login',jsonParser, (req, res) =>{
         .getUser({userName})
         .then( user =>{
             if (user){
-                bcrypt.compare( userPassword, user.userPassword)
+                bcrypt.compare( userPassword, user[0].userPassword)
                     .then(result =>{
                         if(result){
                             let userData = {
-                                id : user.id,
-                                userName : user.userName
+                                id : user[0].id,
+                                userName : user[0].userName
                             };
-                            jw.sign(userData, SECRET_TOKEN, (err, token)=>{
+                            jwt.sign(userData, SECRET_TOKEN, {expiresIn: '20m'}, (err, token)=>{
                                 if(err){
-                                    res.statusMessage = "Something went wrong in login";
+                                    res.statusMessage = "Something went wrong in login.";
                                     return res.status(400).end();
                                 }
                                 return res.status(200).json({token});
-                            })
+                            });
                         }
                         else{
-                            throw new Error ("Invalid credentials");
+                            throw new Error ("Invalid credentials.");
                         }
                     })
                     .catch(err => {
@@ -152,7 +163,7 @@ app.post('/users/login',jsonParser, (req, res) =>{
                     });
             }
             else{
-                throw new Error ("User doesn't exist");
+                throw new Error ("User doesn't exist.");
             }
         })
         .catch(err => {
