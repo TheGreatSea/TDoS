@@ -1,0 +1,232 @@
+const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
+account_user = "";
+console.log("Page start")
+
+function watchShowHidden(){
+    let login = document.getElementById('login-sec');
+    let signUp = document.getElementById('showSignUp');
+    let reset = document.getElementById('showResetPassword');
+    signUp.addEventListener('click', (event) =>{
+        event.preventDefault();
+        login.classList.add("hidden");
+        document.getElementById('signUp-sec').classList.remove("hidden");
+    });
+    reset.addEventListener('click', (event) =>{
+        event.preventDefault();
+        login.classList.add("hidden");
+        document.getElementById('recover-sec').classList.remove("hidden");
+    });
+}
+
+function changePassword(username, password){
+    let url = `/users/${username}`;
+    let user = {
+        userName: username, 
+        userPassword: password
+    }
+    let settings = {
+        method : 'PATCH',
+        headers : { 
+            Authorization : `Bearer ${API_KEY}`,
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify( user )
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON);
+            window.alert("Password changed correctly");
+            window.location.reload();
+        })
+        .catch( err => {
+            console.log( err.message);
+            message.innerHTML = err.message;
+        });
+}
+
+function createAccount(username, password){
+    let url = `/users`;
+    let message = document.getElementById("sign-message");
+    let user = {
+        userName: username, 
+        userPassword: password
+    }
+    let settings = {
+        method : 'POST',
+        headers : { 
+            Authorization : `Bearer ${API_KEY}`,
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify( user )
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON);
+            enteraccount(responseJSON.userName, responseJSON.userPassword);
+        })
+        .catch( err => {
+            message.innerHTML = err.message;
+            console.log(err.message);
+        });
+}
+
+function getAccount(username){
+    let passForm = document.getElementById("newPassword");
+    let message = document.getElementById("recover-message");
+
+    let url = `/user?userName=${username}`;
+    let settings = {
+        method : 'GET',
+        headers : { 
+            Authorization : `Bearer ${API_KEY}`
+        }   
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON[0]);
+            document.getElementById("recoverUser").classList.add("hidden");
+            passForm.classList.remove('hidden');
+        })
+        .catch( err => {
+            message.innerHTML = err.message;
+            console.log(err.message);
+        });
+}
+
+function enteraccount(username, password){
+    let url = `/user?userName=${username}`;
+    let settings = {
+        method : 'GET',
+        headers : { 
+            Authorization : `Bearer ${API_KEY}`
+        }   
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON[0]);
+            if(String(password) !== String(responseJSON[0].userPassword)){
+                document.getElementById("passwordLogin").value = "";
+                document.getElementById("login-message").innerHTML = "Incorrect password.";
+            }
+            else{
+                let w = window.open(`./index.html?userName=${responseJSON[0].id}`, '_self');
+            }
+        })
+        .catch( err => {
+            message.innerHTML = err.message;
+            console.log(err.message);
+        });
+}
+
+function watchLogin(){
+    let form = document.getElementById("login");
+    form.addEventListener( 'submit', (event) =>{
+        event.preventDefault();
+        console.log("click");
+        let username = document.getElementById("usernameLogin").value;
+        let password = document.getElementById("passwordLogin").value;
+        if(!username || !password){
+            password = "";
+            let message = document.getElementById("login-message");
+            message.innerHTML = "Username or Password fields are missing. Try again.";
+        }
+        else
+            enteraccount(username, password);
+    });
+}
+
+function watchSignUp(){
+    let form = document.getElementById("sign-up");
+    form.addEventListener( 'submit', (event) =>{
+        event.preventDefault();
+        let message = document.getElementById("sign-message");
+        let username = document.getElementById("usernamesignUp").value;
+        let password = document.getElementById("passwordsignUp").value;
+        let repeatPassword = document.getElementById("passwordRepeatSignUp").value;
+        if(!username || !password || !repeatPassword){
+            document.getElementById("passwordsignUp").value = '';
+            document.getElementById("passwordRepeatSignUp").value = '';
+            message.innerHTML = "Username or Password fields are missing. Try again.";
+        }
+        else if(password !== repeatPassword){
+            document.getElementById("passwordsignUp").value = '';
+            document.getElementById("passwordRepeatSignUp").value = '';
+            message.innerHTML = "Password fields are not the same. Try again.";
+        }
+        else{
+            createAccount(username, password);
+        }        
+    });
+}
+
+
+function watchPasswordReset(){
+    let userForm = document.getElementById("recoverAccount");
+    let passForm = document.getElementById("newPassword");
+    let message = document.getElementById("recover-message");
+
+    userForm.addEventListener( 'submit', (event) =>{
+        event.preventDefault();
+        let username = document.getElementById("usernameRecover").value;
+        if (!username){
+            message.innerHTML = "Missing user name field. Try again.";
+        }
+        else{
+            getAccount(username);
+        } 
+    });
+
+    passForm.addEventListener( 'submit', (event) =>{
+        event.preventDefault();
+        let username = document.getElementById("usernameRecover").value;
+        let password = document.getElementById("passwordRecover").value;
+        let repeatPassword = document.getElementById("passwordRepeatRecover").value;
+
+        if(!username || !password || !repeatPassword){
+            document.getElementById("passwordsignUp").value = '';
+            document.getElementById("passwordRepeatSignUp").value = '';
+            message.innerHTML = "Username or Password fields are missing. Try again.";
+        }
+        else if(password !== repeatPassword){
+            document.getElementById("passwordsignUp").value = '';
+            document.getElementById("passwordRepeatSignUp").value = '';
+            message.innerHTML = "Password fields are not the same. Try again.";
+        }
+        else{
+            changePassword(username, password);
+        }        
+    });
+}
+
+function init(){
+    watchShowHidden();
+    watchLogin();
+    watchSignUp();
+    watchPasswordReset();
+}
+
+init();
