@@ -73,7 +73,17 @@
     },
     getSummaryFeed: function(userId) {
         return summariesCollection
-            .find({share: { $all : ["Public", userId] } } )
+            .find({share: { $all : ["public", userId] } } )
+            .then(foundSummary => {
+                return foundSummary;
+            })
+            .catch(err => {
+                return err;
+            });
+    },
+    getSummaryPublic: function() {
+        return summariesCollection
+            .find({share: { $all : ["public"] } } )
             .then(foundSummary => {
                 return foundSummary;
             })

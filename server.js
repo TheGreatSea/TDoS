@@ -23,12 +23,9 @@ app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(authorization);
 
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-/*                         Users                             */
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+//User Obtain data
+//////////////////////////////////////////////////////////////
 
 app.get('/users', (req, res) => {
     users
@@ -44,12 +41,10 @@ app.get('/users', (req, res) => {
 
 app.get('/user', (req, res) => {
     let userName = req.query.userName;
-
     if (!userName) {
         res.statusMesagge = "User is required";
         return res.status(406).end();
     }
-
     users
         .getUser({ userName })
         .then(result => {
@@ -66,54 +61,32 @@ app.get('/user', (req, res) => {
         });
 });
 
-app.post('/users/changePassword',jsonParser, (req, res) =>{
-    console.log("Changing password");
-    console.log("Body ", req.body);
-    let { userName, newPassword } = req.body;
-    if (!userName || !newPassword ) {
-        res.statusMessage = "Missing Fields";
-        res.status(406).end();
+app.get('/userbyId', (req, res) => {
+    let id = req.query.id;
+    if (!id) {
+        res.statusMesagge = "Id is required";
+        return res.status(406).end();
     }
-
     users
-        .getUser({userName})
-        .then( user =>{
-            if (user){
-                bcrypt.hash(userPassword, 10)
-                    .then(hashedPassword => {
-                        let updateUser = {
-                            userName: userName,
-                            userPassword: hashedPassword
-                        }
-                        users
-                            .updateUser({ userName: userName }, updateUser)
-                            .then(result => {
-                                if (result.errmsg) {
-                                    res.statusMessage = "Error changing the password";
-                                    return res.status(409).end();
-                                }
-                                return res.status(201).json(result);
-                            })
-                            .catch(err => {
-                                res.statusMessage = "Error with the database";
-                                return res.status(500).end();
-                            });
-                    })
-                    .catch(err => {
-                        res.statusMessage = "Error with the database";
-                        return res.status(500).end();
-                    });
+        .getUser({ id })
+        .then(result => {
+            console.log(result.length);
+            if (result.length === 0) {
+                res.statusMesagge = `${Id} not found`;
+                return res.status(404).end();
             }
-            else{
-                throw new Error ("User doesn't exist");
-            }
+            return res.status(200).json(result);
         })
         .catch(err => {
-            res.statusMessage = err.message;
-            return res.status(400).end();
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
         });
 });
 
+
+//////////////////////////////////////////////////////////////
+//User register, validation, changes and delete
+//////////////////////////////////////////////////////////////
 app.get('/users/validate-token',(req, res) =>{
     const{ sessiontoken} = req.headers;
     jwt.verify(sessiontoken, SECRET_TOKEN, (err, decoded)=>{
@@ -215,6 +188,53 @@ app.post('/users/register', jsonParser, (req, res) => {
         });
 });
 
+app.post('/users/changePassword',jsonParser, (req, res) =>{
+    console.log("Changing password");
+    console.log("Body ", req.body);
+    let { userName, newPassword } = req.body;
+    if (!userName || !newPassword ) {
+        res.statusMessage = "Missing Fields";
+        res.status(406).end();
+    }
+    users
+        .getUser({userName})
+        .then( user =>{
+            if (user){
+                bcrypt.hash(userPassword, 10)
+                    .then(hashedPassword => {
+                        let updateUser = {
+                            userName: userName,
+                            userPassword: hashedPassword
+                        }
+                        users
+                            .updateUser({ userName: userName }, updateUser)
+                            .then(result => {
+                                if (result.errmsg) {
+                                    res.statusMessage = "Error changing the password";
+                                    return res.status(409).end();
+                                }
+                                return res.status(201).json(result);
+                            })
+                            .catch(err => {
+                                res.statusMessage = "Error with the database";
+                                return res.status(500).end();
+                            });
+                    })
+                    .catch(err => {
+                        res.statusMessage = "Error with the database";
+                        return res.status(500).end();
+                    });
+            }
+            else{
+                throw new Error ("User doesn't exist");
+            }
+        })
+        .catch(err => {
+            res.statusMessage = err.message;
+            return res.status(400).end();
+        });
+});
+
 app.delete('/users/:userName', (req, res) => {
     let UserName = req.params.userName;
     console.log(UserName)
@@ -237,35 +257,9 @@ app.delete('/users/:userName', (req, res) => {
         });
 });
 
-app.patch('/users/:userName', jsonParser, (req, res) => {
-    console.log(req.body);
-    let { userName, userPassword } = req.body;
-    let paramsUN = req.params.userName;
-    if (!userName) {
-        res.statusMessage = "UserName was not sent in request";
-        return res.status(406).end();
-    }
-    if (userName !== paramsUN) {
-        res.statusMessage = "The userNames do not match";
-        return res.status(409).end();
-    }
-    let user = {
-        userName: String(userName),
-        userPassword: String(userPassword)
-    }
-    console.log(user);
-
-    users
-        .updateUser({ userName: userName }, user)
-        .then(result => {
-            res.statusMessage = "The user information was changed succesfully";
-            return res.status(202).json(result);
-        })
-        .catch(err => {
-            res.statusMessage = "Error with the database";
-            return res.status(500).end();
-        });
-});
+//////////////////////////////////////////////////////////////
+//User register, validation, changes and delete
+//////////////////////////////////////////////////////////////
 
 //Add friend
 app.post('/userFriend', (req, res) => {
@@ -565,6 +559,25 @@ app.get('/summaryFeed', (req, res) => {
             return res.status(500).end();
         });
 });
+
+app.get('/summaryPublic', (req, res) => {
+    summaries
+        .getSummaryPublic()
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `Public feed not found`;
+                console.log("Public feed not found");
+                return res.status(404).end();
+            }
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
+
+
 
 app.post('/summary', jsonParser, (req, res) => {
     console.log("Adding a new summary");
