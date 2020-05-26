@@ -346,7 +346,6 @@ app.post('/userSummary', (req, res) => {
             return res.status(500).end();
         });
 });
-
 // Accept a friend
 app.patch('/userFriend', (req, res) => {
     let userName = req.query.userName;
@@ -440,7 +439,6 @@ app.delete('/userFriend', (req, res) => {
             return res.status(500).end();
         });
 });
-
 //Delete a summary from a user
 app.delete('/userSummary', (req, res) => {
     let userName = req.query.userName;

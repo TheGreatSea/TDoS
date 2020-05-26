@@ -1,6 +1,6 @@
 const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
 
-function init(){
+function validate(){
     let url = `/users/validate-token`;
     let settings = {
         method : 'GET',
@@ -32,7 +32,7 @@ function init(){
         });
 }
 
-init();
+validate();
 
 /*
 function getParameterByName(name, url) {
