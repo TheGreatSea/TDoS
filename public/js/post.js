@@ -118,7 +118,7 @@ function createSummary(){
         }
     }
     let summaryobj = {
-        summaryCreator: id,
+        summaryCreator: userName,
         summaryName: title,
         summarySource: source,
         summaryTags: tags_Array,

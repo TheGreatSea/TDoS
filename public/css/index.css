@@ -2,3 +2,21 @@ body{
     background-color: #003153;
     color: white;
 }
+
+table{
+    width: 50%;
+    border : 1px solid #f4f4f4;
+    border-collapse : collapse;
+  }
+ 
+td, th{
+    border : 1px solid #f4f4f4;
+}
+
+.hidden{
+    display: none;
+}
+
+.info{
+    width: 25%;
+}

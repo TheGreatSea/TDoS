@@ -1,5 +1,11 @@
 const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
 
+let userName = "";
+let id = "";
+let friendList = [];
+let first_position = 0;
+let last_position = 9;
+
 function validate(){
     let url = `/users/validate-token`;
     let settings = {
@@ -17,22 +23,138 @@ function validate(){
             throw new Error(response.statusText);
         })
         .then(responseJSON =>{
-            document.querySelector('#section1').innerHTML = `
-            <div> 
-            <p>${responseJSON.userName}</p>
-            <p>${responseJSON.id}</p>
-            </div>
-            `;
+            userName = responseJSON.userName;
+            id = responseJSON.id;
+            friendList = responseJSON.friendList;
             console.log(responseJSON);
         })
         .catch( err => {
-            window.alert("Session expired. Redirecting");
             localStorage.removeItem('token');
-            window.location.href = "/user_entry.html";
         });
 }
 
+function getPublicFeed(){
+    let url = `/summaryPublic`;
+    let settings = {
+        method : 'GET',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON);
+            return responseJSON;
+        })
+        .catch( err => {
+            let main = document.getElementById("main");
+            main.innerHTML = `<div class="error-msg">${err.message}</div>`
+            return 0;
+        });
+}
+
+function generateFeed(feed){ 
+    if (feed != 0){
+        if (first_position < 0){
+            first_position = 0;
+            last_position = 9;
+            document.getElementById("prev").classList.add("hidden");
+        }
+        else if (last_position > feed.length){
+            //first_position += 10 ;
+            last_position = feed.length;
+            document.getElementById("next").classList.add("hidden");
+        }
+        else{
+            document.getElementById("prev").classList.remove("hidden");
+            document.getElementById("next").classList.remove("hidden");
+        }
+        let main = document.getElementById("main");
+        main.innerHTML = "";
+        for( let i = first_position ; i< last_position; i++){
+            let tags = "";
+            for(let j = 0; j< feed[i].summaryTags.length; j++){
+                tags += `<div class = "tags">${feed[i].summaryTags[j]}</div>`
+            }
+            let dd = String(feed[i].date.getDate()).padStart(2, '0');
+            let mm = String(feed[i].date.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = feed[i].date.getFullYear();
+            main.innerHTML += `
+                <table id="table_${feed[i].id}">
+                    <thead>
+                        <tr>
+                            <th class="Title" colspan="10">${feed[i].summaryName}</th>
+                        </tr>
+                        <tr class="hidden">
+                            <th id="SummaryId" colspan="10">${feed[i].id}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="info">
+                                ${feed[i].summaryName}
+                            </td>
+                            <td rowspan="3" class="info">
+                                ${tags}
+                            </td>
+                            <td rowspan="3" colspan="8">
+                                ${feed[i].summary}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="info">
+                                ${feed[i].summarySource}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="info hidden">
+                                <button class="saveBtn"> Save </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="hidden">${feed[i].share}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">${dd/mm/yyyy}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+        }
+    }
+}
+function watchFeedBtn(feed){
+    let prev_btn = document.getElementById("prev");
+    let next_btn = document.getElementById("next");
+    prev_btn.addEventListener('click', (event)=>{
+        first_position -= 10;
+        last_position -= 10;
+        generateFeed(feed);
+        event.preventDefault();
+    });
+    next_btn.addEventListener('click', (event)=>{
+        first_position += 10;
+        last_position += 10;
+        generateFeed(feed);
+        event.preventDefault();
+    });
+}
+
+function init(){
+    feed = getPublicFeed();
+    watchFeedBtn(feed);
+    generateFeed(feed);
+}
 validate();
+init();
 
 /*
 function getParameterByName(name, url) {

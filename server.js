@@ -116,7 +116,8 @@ app.post('/users/login',jsonParser, (req, res) =>{
                         if(result){
                             let userData = {
                                 id : user[0].id,
-                                userName : user[0].userName
+                                userName : user[0].userName,
+                                friendList : user[0].friendList
                             };
                             jwt.sign(userData, SECRET_TOKEN, {expiresIn: '20m'}, (err, token)=>{
                                 if(err){
@@ -258,7 +259,7 @@ app.delete('/users/:userName', (req, res) => {
 });
 
 //////////////////////////////////////////////////////////////
-//User register, validation, changes and delete
+//Operations for friend managment and summary managment
 //////////////////////////////////////////////////////////////
 
 //Add friend
