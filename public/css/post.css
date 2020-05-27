@@ -24,7 +24,7 @@ h1{
 h2{
     display: flex;
     margin: auto;
-    width: 70%;
+    width: 50%;
     justify-content: center;
     background-color: #CF0000;
     padding: 20px;
@@ -32,7 +32,7 @@ h2{
 h3{
     display: flex;
     margin: 0;
-    width: 70%;
+    width: 50%;
     justify-content: center;
     align-content: flex-start;
 }
@@ -45,7 +45,7 @@ main{
 }
 form{
     background-color: #1A1A1A;
-    width: 70%;
+    width: 50%;
     padding: 5%;
     padding-top: 2.5%;
     margin: 0;
@@ -90,7 +90,7 @@ button{
     border: 1px solid #555555;
     background-color: #1A1A1A;
     color: white;
-    width: 15%;
+    width: 80px;
 }
 .simple{
     margin: 10px;
@@ -124,6 +124,7 @@ footer{
 label{
     padding: 5%;
     padding-left: 0;
+    padding-right: 0;
     margin: 0;
 }
 
@@ -160,8 +161,53 @@ label{
     flex-wrap: wrap;
 }
 #quantity{
-    width: 4%;
+    width: 40px;
 }
 #linktext,#title,#source{
     width: 100%;
+}
+div{
+    width: 100%;
+    margin: 0;
+}
+textarea{
+    width: 100%;
+    margin: 0;
+}
+
+.radio{
+    margin-top: 5px;
+    margin-left: 0;
+    margin-right: 10px;
+    float: left;
+}
+
+
+@media(min-width: 600px) and (max-width:990px){
+    form{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 80%;
+    }
+    h2{
+        width: 80%;
+    }
+    h3{
+        width: 80%;
+    }
+}
+
+
+@media (max-width:599px){
+    form{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    h2{
+        width: 100%;
+    }
+    h3{
+        width: 100%;
+    }
 }

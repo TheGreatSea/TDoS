@@ -174,7 +174,7 @@ function addSummaryToUser(name, summaryId){
         })
         .then(responseJSON =>{
             console.log(responseJSON);
-            //window.location.href = "/index.html";    
+            //window.location.href = "/pages/user.html";    
         })
         .catch( err => {
             message.innerHTML = err.message;
