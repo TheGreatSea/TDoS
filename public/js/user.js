@@ -58,3 +58,4 @@ function init(){
 }
 
 validate();
+init();

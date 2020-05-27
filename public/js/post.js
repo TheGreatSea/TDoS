@@ -28,7 +28,7 @@ function validate(){
         .catch( err => {
             window.alert("Session expired. Redirecting");
             localStorage.removeItem('token');
-            window.location.href = "/user_entry.html";
+            window.location.href = "/pages/user_entry.html";
         });
 }
 
@@ -55,6 +55,7 @@ function getSummary(url_link, num_sentences){
             document.getElementById("summary_body").value = responseJSON.summary;
             let createForm = document.getElementById("createForm");
             createForm.classList.remove("hidden");
+            window.scrollTo(0,document.body.scrollHeight);
             console.log(responseJSON);
         })
         .catch(err => {
@@ -86,6 +87,7 @@ function doSummary(text, num_sentences){
             document.getElementById("summary_body").value = responseJSON.summary;
             let createForm = document.getElementById("createForm");
             createForm.classList.remove("hidden");
+            window.scrollTo(0,document.body.scrollHeight);
             console.log(responseJSON);
         })
         .catch(err => {
@@ -234,12 +236,38 @@ function watchCreateButton(){
     });
 }
 
+function watchNav(){
+    let nav = document.getElementById("nav-ul");
+    nav.addEventListener('click', (event)=>{
+        event.preventDefault();
+        console.log(event.target.id);
+        if(event.target.id == "home"){
+            window.location.href = "/pages/user.html";
+        }
+        if(event.target.id == "post"){
+            window.location.href = "/pages/post.html";
+        }
+        if(event.target.id == "friends"){
+            window.location.href = "/pages/friends.html";
+        }
+        if(event.target.id == "about"){
+            window.location.href = "/pages/about.html";
+        }
+        if(event.target.id == "contact"){
+            window.location.href = "/pages/contact.html";
+        }
+    });
+}
+
 function init() {
+    watchNav();
     watchCreateButton()
     watchGetSummaryButton();
     watchDoSummaryButton();
     watchAddTag();
 }
+
+
 
 validate();
 init();

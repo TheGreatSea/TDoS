@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-
 body{
     font-family: 'Open Sans', sans-serif;
     background-color: black;
@@ -16,16 +15,43 @@ body{
     min-height: 100vh;
 }
 
-{
+h1{
     background-color: #CF0000;
     padding: 20px;
     margin: 0;
+}
+
+h2{
+    display: flex;
+    margin: auto;
+    width: 70%;
+    justify-content: center;
+    background-color: #CF0000;
+    padding: 20px;
+}
+h3{
+    display: flex;
+    margin: 0;
+    width: 70%;
+    justify-content: center;
+    align-content: flex-start;
 }
 
 main{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 10px;
+}
+form{
+    background-color: #1A1A1A;
+    width: 70%;
+    padding: 5%;
+    padding-top: 2.5%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 ul{
@@ -55,4 +81,87 @@ section{
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+button{
+    margin: 10px;
+    margin-left: 0;
+    padding: 0.5%;
+    border: 1px solid #555555;
+    background-color: #1A1A1A;
+    color: white;
+    width: 15%;
+}
+.simple{
+    margin: 10px;
+    padding: 0.1%;
+    border: 0px solid #555555;
+    background-color: #1A1A1A;
+    color: white;
+    width: 5%;
+}
+p{
+    margin: 10px;
+    margin-left: 0;
+}
+.message-summary, .message-create{
+    margin: 10px;
+    padding: 0;
+    font-weight: bolder;
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: #555555;
+}
+
+footer{
+    display: flex;
+    background-color: #1A1A1A;
+    padding: 0%;
+    margin: auto 0% 0 0;
+}
+label{
+    padding: 5%;
+    padding-left: 0;
+    margin: 0;
+}
+
+.hidden{
+    display: none;
+}
+.share-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.inner{
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
+}
+.tags{
+    margin: 1%;
+    margin-left: 0;
+}
+#tags-container{
+    margin: auto;
+    margin-left: 0;
+    padding: auto;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#tag-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#quantity{
+    width: 4%;
+}
+#linktext,#title,#source{
+    width: 100%;
 }
