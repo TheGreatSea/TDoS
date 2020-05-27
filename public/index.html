@@ -10,27 +10,30 @@
         <header>
             <h1>TDoS: The DataBase Of Summaries</h1>
         </header>
-        <nav>
-            <ul>
-                <li class="nav">Home</li>
-                <li class="nav">Enter account</li>
-                <li class="nav">About</li>
-                <li class="nav">Contact</li>
-            </ul>
-        </nav>
         <section>
-            <form id="filter-form">
-                <input type="text" size="50" id="filter-value">
-                <select name="filter" id="filter-field">
-                    <option value="Title" selected="selected">Title</option>
-                    <option value="Creator">Creator</option>
-                    <option value="Source">Source</option>
-                    <option value="Tags">Tags</option>
-                    <option value="Summary">Summary</option>
-                </select>
-                <button type="submit" class="filter">Filter</button>
-            </form>
+            <nav>
+                <ul>
+                    <li class="nav">Home</li>
+                    <li class="nav">Enter account</li>
+                    <li class="nav">About</li>
+                    <li class="nav">Contact</li>
+                </ul>
+            </nav>
+            <div class="nav-div">
+                <form id="filter-form">
+                    <input type="text" size="50" id="filter-value" placeholder="Search">
+                    <select name="filter" id="filter-field">
+                        <option value="Title" selected="selected">Title</option>
+                        <option value="Creator">Creator</option>
+                        <option value="Source">Source</option>
+                        <option value="Tags">Tags</option>
+                        <option value="Summary">Summary</option>
+                    </select>
+                    <button type="submit" class="filter">Search</button>
+                </form>
+            </div>
         </section>
+        
         <main id="main">          
         </main>
         <div class="summary-nav">

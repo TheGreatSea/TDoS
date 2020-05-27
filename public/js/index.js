@@ -111,10 +111,25 @@ function generateFeed(){
                 <table>
                     <thead>
                         <tr>
-                            <th class="Title" colspan="10">${feed[i].summaryName}</th>
+                            <th class="Title" colspan="10"><h3>${feed[i].summaryName}</h3></th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td rowspan="1" class="info">
+                                Tags
+                            </td>
+                            <td class="info_dump" rowspan="3" colspan="9">
+                                ${feed[i].summary}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="info">
+                                ${tags}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
                         <tr>
                             <td  colspan="10">
                                Creator: ${feed[i].summaryCreator}
@@ -131,22 +146,7 @@ function generateFeed(){
                             </td>
                         </tr>
                         <tr>
-                            <td rowspan="1" class="info">
-                                Tags
-                            </td>
-                            <td rowspan="3" colspan="9">
-                                ${feed[i].summary}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td rowspan="2" class="info">
-                                ${tags}
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="10">${today}</td>
+                            <td colspan="10">Date created: ${today}</td>
                         </tr>
                     </tfoot>
                 </table>
