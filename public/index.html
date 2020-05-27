@@ -8,7 +8,7 @@
     </head>
     <body>
         <header>
-            <h1>TDoS</h1>
+            <h1>TDoS: The DataBase Of Summaries</h1>
         </header>
         <nav>
             <ul>
@@ -18,15 +18,27 @@
                 <li class="nav">Contact</li>
             </ul>
         </nav>
-        <main id="main">
-            
-            <div>
-                <button id="prev" class="hidden"> << </button> 
-                <button id="next"> >> </button>
-            </div>           
+        <section>
+            <form id="filter-form">
+                <input type="text" size="50" id="filter-value">
+                <select name="filter" id="filter-field">
+                    <option value="Title" selected="selected">Title</option>
+                    <option value="Creator">Creator</option>
+                    <option value="Source">Source</option>
+                    <option value="Tags">Tags</option>
+                    <option value="Summary">Summary</option>
+                </select>
+                <button type="submit" class="filter">Filter</button>
+            </form>
+        </section>
+        <main id="main">          
         </main>
+        <div class="summary-nav">
+            <button type="button" id="prev"> << </button> 
+            <button type="button" id="next"> >> </button>
+        </div> 
         <footer>
-            <p>This site was created by the one who summarizes it all. His name is Bob. Have a good day.</p>
+            This site was created by the one who summarizes it all. His name is Robob, the Robot. Have a good day.
         </footer>
         <script src ="./js/index.js" type = "text/javascript"></script>
     </body>

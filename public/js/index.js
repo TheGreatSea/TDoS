@@ -5,6 +5,14 @@ let id = "";
 let friendList = [];
 let first_position = 0;
 let last_position = 9;
+let prev_btn = document.querySelector('#prev');
+let next_btn = document.querySelector('#next');
+
+let public_feed = [];
+let filered_feed = [];
+let filter = false;
+
+let feed = [];
 
 function validate(){
     let url = `/users/validate-token`;
@@ -50,25 +58,35 @@ function getPublicFeed(){
         })
         .then(responseJSON =>{
             console.log(responseJSON);
-            return responseJSON;
+            responseJSON.reverse();
+            public_feed = responseJSON;
+            feed = public_feed;
+            generateFeed();
         })
         .catch( err => {
             let main = document.getElementById("main");
-            main.innerHTML = `<div class="error-msg">${err.message}</div>`
-            return 0;
+            main.innerHTML = `<div class="error-msg">${err.message}</div>`;
         });
 }
 
-function generateFeed(feed){ 
+function generateFeed(){ 
     if (feed != 0){
-        if (first_position < 0){
+        if(feed.length < 10){
+            first_position = 0;
+            last_position = feed.length;
+            document.getElementById("prev").classList.add("hidden");
+            document.getElementById("next").classList.add("hidden");
+        }
+        else if (first_position <= 0){
             first_position = 0;
             last_position = 9;
             document.getElementById("prev").classList.add("hidden");
+            document.getElementById("next").classList.remove("hidden");
         }
         else if (last_position > feed.length){
             //first_position += 10 ;
             last_position = feed.length;
+            document.getElementById("prev").classList.remove("hidden");
             document.getElementById("next").classList.add("hidden");
         }
         else{
@@ -82,65 +100,72 @@ function generateFeed(feed){
             for(let j = 0; j< feed[i].summaryTags.length; j++){
                 tags += `<div class = "tags">${feed[i].summaryTags[j]}</div>`
             }
-            let dd = String(feed[i].date.getDate()).padStart(2, '0');
-            let mm = String(feed[i].date.getMonth() + 1).padStart(2, '0'); //January is 0!
-            let yyyy = feed[i].date.getFullYear();
+            let today = new Date(feed[i].date);
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0');
+            let yyyy = today.getFullYear();
+            today = mm + '/' + dd + '/' + yyyy;
+            
             main.innerHTML += `
-                <table id="table_${feed[i].id}">
+                <form id="${feed[i].id}" class="feed">
+                <table>
                     <thead>
                         <tr>
                             <th class="Title" colspan="10">${feed[i].summaryName}</th>
                         </tr>
-                        <tr class="hidden">
-                            <th id="SummaryId" colspan="10">${feed[i].id}</th>
-                        </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="info">
-                                ${feed[i].summaryName}
+                            <td  colspan="10">
+                               Creator: ${feed[i].summaryCreator}
                             </td>
-                            <td rowspan="3" class="info">
-                                ${tags}
+                            <td  colspan="2" class="hidden">
+                                <button type="submit" class="saveBtn"> Save </button>
                             </td>
-                            <td rowspan="3" colspan="8">
+                            <td colspan="6" class="hidden">${feed[i].share}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10">
+                                Source: ${feed[i].summarySource}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td rowspan="1" class="info">
+                                Tags
+                            </td>
+                            <td rowspan="3" colspan="9">
                                 ${feed[i].summary}
                             </td>
                         </tr>
                         <tr>
-                            <td class="info">
-                                ${feed[i].summarySource}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="info hidden">
-                                <button class="saveBtn"> Save </button>
+                            <td rowspan="2" class="info">
+                                ${tags}
                             </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="hidden">${feed[i].share}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="6">${dd/mm/yyyy}</td>
+                            <td colspan="10">${today}</td>
                         </tr>
                     </tfoot>
                 </table>
+                </form>
             `;
         }
     }
 }
-function watchFeedBtn(feed){
-    let prev_btn = document.getElementById("prev");
-    let next_btn = document.getElementById("next");
+
+function watchFeedBtn(){
     prev_btn.addEventListener('click', (event)=>{
+        window.scrollTo(0, 0);
         first_position -= 10;
         last_position -= 10;
         generateFeed(feed);
         event.preventDefault();
     });
     next_btn.addEventListener('click', (event)=>{
+        window.scrollTo(0, 0);
         first_position += 10;
         last_position += 10;
         generateFeed(feed);
@@ -148,14 +173,70 @@ function watchFeedBtn(feed){
     });
 }
 
+
+function watchFilter() {
+    let form = document.getElementById("filter-form");
+    form.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        let filter_value = String(document.getElementById("filter-value").value);
+        console.log(filter_value);
+        if(filter_value == ""){
+            console.log(public_feed);
+            feed = public_feed;
+            generateFeed();
+        }
+        else{
+            filter_value = filter_value.toLowerCase();
+            let field = document.getElementById("filter-field").value;
+            filered_feed = [];
+            for(let i=0; i< public_feed.length; i++){
+                if(field == "Title"){
+                    let str = String(public_feed[i].summaryName).toLowerCase();
+                    if(str.includes(filter_value)){
+                        filered_feed.push(public_feed[i]);
+                    }
+                }
+                else if(field == "Creator"){
+                    let str = String(public_feed[i].summaryCreator).toLowerCase();
+                    if(str.includes(filter_value)){
+                        filered_feed.push(public_feed[i]);
+                    }
+                }
+                else if(field == "Source"){
+                    let str = String(public_feed[i].summarySource).toLowerCase();
+                    if(str.includes(filter_value)){
+                        filered_feed.push(public_feed[i]);
+                    }
+                }
+                else if(field == "Tags"){
+                    for(let j = 0; j< feed[i].summaryTags.length; j++){
+                        let str = String(public_feed[i].summaryTags[j]).toLowerCase();
+                        if(str.includes(filter_value)){
+                            filered_feed.push(public_feed[i]);
+                            break;
+                        }
+                    }
+                }
+                else if(field == "Summary"){
+                    let str = String(public_feed[i].summary).toLowerCase();
+                    if(str.includes(filter_value)){
+                        filered_feed.push(public_feed[i]);
+                    }
+                }
+            }
+            feed = filered_feed;
+            generateFeed();
+        }
+    });
+}
+
 function init(){
-    feed = getPublicFeed();
-    watchFeedBtn(feed);
-    generateFeed(feed);
+    getPublicFeed();
+    watchFeedBtn();
+    watchFilter();
 }
 validate();
 init();
-
 /*
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
