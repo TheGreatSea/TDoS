@@ -17,12 +17,9 @@ function validate(){
             throw new Error(response.statusText);
         })
         .then(responseJSON =>{
-            document.querySelector('#section1').innerHTML = `
-            <div> 
-            <p>${responseJSON.userName}</p>
-            <p>${responseJSON.id}</p>
-            </div>
-            `;
+            userName = responseJSON.userName;
+            id = responseJSON.id;
+            friendList = responseJSON.friendList;
             console.log(responseJSON);
         })
         .catch( err => {
@@ -30,6 +27,34 @@ function validate(){
             localStorage.removeItem('token');
             window.location.href = "/user_entry.html";
         });
+}
+
+
+function watchNav(){
+    let nav = document.getElementById("nav-ul");
+    nav.addEventListener('click', (event)=>{
+        event.preventDefault();
+        console.log(event.target.id);
+        if(event.target.id == "home"){
+            window.location.href = "/pages/user.html";
+        }
+        if(event.target.id == "post"){
+            window.location.href = "/pages/post.html";
+        }
+        if(event.target.id == "friends"){
+            window.location.href = "/pages/friends.html";
+        }
+        if(event.target.id == "about"){
+            window.location.href = "/pages/about.html";
+        }
+        if(event.target.id == "contact"){
+            window.location.href = "/pages/contact.html";
+        }
+    });
+}
+
+function init(){
+    watchNav();
 }
 
 validate();

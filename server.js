@@ -398,7 +398,7 @@ app.delete('/userFriend', (req, res) => {
         return res.status(406).end();
     }
     if (!queryfriendName) {
-        res.statusMesagge = "Missing Id of friend";
+        res.statusMesagge = "Missing name of friend";
         return res.status(406).end();
     }
     users
@@ -577,8 +577,6 @@ app.get('/summaryPublic', (req, res) => {
             return res.status(500).end();
         });
 });
-
-
 
 app.post('/summary', jsonParser, (req, res) => {
     console.log("Adding a new summary");

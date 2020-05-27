@@ -70,7 +70,7 @@ function enteraccount(username, password){
         .then(responseJSON =>{
             localStorage.setItem('token', responseJSON.token);
             console.log(responseJSON);
-            window.location.href = "/user.html";    
+            window.location.href = "/pages/user.html";    
         })
         .catch( err => {
             message.innerHTML = err.message;

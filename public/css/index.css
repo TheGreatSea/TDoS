@@ -27,7 +27,6 @@ main{
     align-items: center;
 }
 
-
 ul{
     background-color : #1A1A1A;
     list-style : none;
@@ -51,6 +50,7 @@ section{
     margin: 0;
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -77,10 +77,12 @@ button{
     background-color: #1A1A1A;
     color: white;
 }
+
 button:hover{
     cursor: pointer;
     background-color: #555555;
 }
+
 footer{
     display: flex;
     background-color: #1A1A1A;
@@ -126,10 +128,33 @@ footer{
     justify-content: center;
     align-items: center;
 }
+
 .filter{
     margin: 10px;
     padding: 5px;
     border: 0px;
     background-color: #1A1A1A;
     color: white;
+}
+
+@media(min-width: 600px) and (max-width:990px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 90%;
+    }
+  }
+
+
+@media (max-width:599px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    input{
+        margin-left: 5%;
+        width: 60%;
+    }
+
 }
