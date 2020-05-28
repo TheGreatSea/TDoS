@@ -4,6 +4,14 @@
     box-sizing: border-box;
 }
 
+span{
+    text-decoration: underline;
+}
+span:hover{
+    color: #CF0000;
+    cursor: pointer;
+}
+
 body{
     font-family: 'Open Sans', sans-serif;
     background-color: black;

@@ -260,6 +260,12 @@ function watchNav(){
             window.location.href = "/pages/contact.html";
         }
     });
+    let log_out = document.getElementById("log_out");
+    log_out.addEventListener('click', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('token');
+        window.location.href = "./user_entry.html";
+    });
 }
 
 function init() {

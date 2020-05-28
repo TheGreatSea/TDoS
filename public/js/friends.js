@@ -1,5 +1,13 @@
 const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
 
+let userName = "";
+let id = "";
+let friendList = [];
+
+let users = [];
+let friends = [];
+let pending = [];
+
 function validate(){
     let url = `/users/validate-token`;
     let settings = {
@@ -29,6 +37,89 @@ function validate(){
         });
 }
 
+function populate(){
+    
+}
+
+
+function getFriends(){
+    let url = `/acceptedFriends?userName=${userName}`;
+    let settings = {
+        method : 'GET',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Done friends");
+            friends = responseJSON;
+        })
+        .catch( err => {
+            let main = document.getElementById("main");
+            main.innerHTML = `<div class="error-msg">${err.message}</div>`;
+        });
+}
+
+
+function getPending(){
+    let url = `/pendingFriends?userName=${userName}`;
+    let settings = {
+        method : 'GET',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Done pending");
+            pending = responseJSON;
+            getFriends();
+        })
+        .catch( err => {
+            let main = document.getElementById("main");
+            main.innerHTML = `<div class="error-msg">${err.message}</div>`;
+        });
+}
+
+function getNotFriends(){
+    let url = `/notFriends`;
+    let settings = {
+        method : 'GET',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Done not friends");
+            users = responseJSON;
+            getPending();
+        })
+        .catch( err => {
+            let main = document.getElementById("main");
+            main.innerHTML = `<div class="error-msg">${err.message}</div>`;
+        });
+}
+
 
 function watchNav(){
     let nav = document.getElementById("nav-ul");
@@ -54,10 +145,17 @@ function watchNav(){
             window.location.href = "/pages/contact.html";
         }
     });
+    let log_out = document.getElementById("log_out");
+    log_out.addEventListener('click', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('token');
+        window.location.href = "./user_entry.html";
+    });
 }
 
 function init(){
     watchNav();
+    getNotFriends();
 }
 
 validate();

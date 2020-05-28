@@ -262,7 +262,99 @@ app.delete('/users/:userName', (req, res) => {
 //Operations for friend managment and summary managment
 //////////////////////////////////////////////////////////////
 
-//Add friend
+//Get all not friends of user
+app.get('/notFriends', (req, res) => {
+    let userName = req.query.userName;
+    if (!userName) {
+        res.statusMesagge = "UserName is required";
+        return res.status(406).end();
+    }
+    users
+        .getUsers()
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `Error finding friends`;
+                return res.status(404).end();
+            }
+            let notFriends = [];
+            for(let i=0; i < result.length; i++){
+                let index = result[i].friendList.findIndex(i => i.friendName == userName);
+                if(index == -1){
+                    if(result[i].userName != userName)
+                        notFriends.push(result[i].userName);
+                }
+            }
+            console.log(notFriends);
+            return res.status(200).json(notFriends);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
+
+//Get all pending friends of user
+
+app.get('/pendingFriends', (req, res) => {
+    let userName = req.query.userName;
+    if (!userName) {
+        res.statusMesagge = "UserName is required";
+        return res.status(406).end();
+    }
+    users
+        .getUser({userName : userName})
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `${userName} pending friends not found`;
+                return res.status(404).end();
+            }
+            let pending = [];
+            
+            for(let i=0; i < result[0].friendList.length; i++){
+                if(result[0].friendList[i].status == 'Pending'){
+                    pending.push(result[0].friendList[i]);
+                }
+            }
+            console.log(pending);
+            return res.status(200).json(pending);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
+
+//Get all accepted friends
+
+app.get('/acceptedFriends', (req, res) => {
+    let userName = req.query.userName;
+    if (!userName) {
+        res.statusMesagge = "UserName is required";
+        return res.status(406).end();
+    }
+    users
+        .getUser({userName : userName})
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `${userName} accepted friends not found`;
+                return res.status(404).end();
+            }
+            let accepted = [];
+            for(let i=0; i < result[0].friendList.length; i++){
+                if(result[0].friendList[i].status == 'Accepted'){
+                    accepted.push(result[0].friendList[i]);
+                }
+            }
+            console.log(accepted);
+            return res.status(200).json(accepted);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
+
+//Send a friend request
 app.post('/userFriend', (req, res) => {
     let userName = req.query.userName;
     let queryfriendName = req.query.friendName;
@@ -276,7 +368,8 @@ app.post('/userFriend', (req, res) => {
     }
     let friendObj = {
         friendName: queryfriendName,
-        status: 'Pending'
+        status: 'Pending',
+        sender: userName
     };
     users
         .getUser({userName})
@@ -389,6 +482,37 @@ app.patch('/userFriend', (req, res) => {
             return res.status(500).end();
         });
 });
+//Add friend to the summaries shared with friends
+app.patch('/shareToFriend', (req, res) => {
+    let userName = req.query.userName;
+    let queryfriendName = req.query.friendName;
+    if (!userName) {
+        res.statusMesagge = "Missing user field";
+        return res.status(406).end();
+    }
+    if (!queryfriendName) {
+        res.statusMesagge = "Missing Id of friend";
+        return res.status(406).end();
+    }
+    summaries
+        .getSummarybyCreator(creatorId)
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `${creatorId} summaries not found`;
+                return res.status(404).end();
+            }
+            for(let i = 0; i < result.length;i++){
+                if (result[i].share[0] == "Friends"){
+                    result[i].share.push(String(queryfriendName));
+                }
+            }
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
 //Delete a friend
 app.delete('/userFriend', (req, res) => {
     let userName = req.query.userName;
@@ -477,7 +601,6 @@ app.delete('/userSummary', (req, res) => {
             return res.status(500).end();
         });
 });
-
 
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
