@@ -29,6 +29,7 @@ function validate(){
             id = responseJSON.id;
             friendList = responseJSON.friendList;
             console.log(responseJSON);
+            init();
         })
         .catch( err => {
             window.alert("Session expired. Redirecting");
@@ -37,10 +38,32 @@ function validate(){
         });
 }
 
-function populate(){
-    
+function populatePending(){
+    console.log("Populating pending");
+    let secPending = document.getElementById("secPending");
+    if(pending.length != 0){
+        for(let i = 0; i< pending.length;i++){
+            if (pending[i].sender == userName){
+                secPending.innerHTML += `
+                
+                
+                `;
+            }
+            else{
+
+            }
+        }
+    }
 }
 
+function populate(){
+    console.log(users);
+    console.log(friends);
+    console.log(pending);
+    let secFriends = document.getElementById("secFriends");
+    let secNotFriends = document.getElementById("secNotFriends");
+
+}
 
 function getFriends(){
     let url = `/acceptedFriends?userName=${userName}`;
@@ -60,6 +83,7 @@ function getFriends(){
         .then(responseJSON =>{
             console.log("Done friends");
             friends = responseJSON;
+            populate();
         })
         .catch( err => {
             let main = document.getElementById("main");
@@ -95,7 +119,7 @@ function getPending(){
 }
 
 function getNotFriends(){
-    let url = `/notFriends`;
+    let url = `/notFriends?userName=${userName}`;
     let settings = {
         method : 'GET',
         headers : {
@@ -120,6 +144,13 @@ function getNotFriends(){
         });
 }
 
+function watchPopulation(){
+    let sec = document.getElementById("population");
+    sec.addEventListener('click', (event) => {
+        event.preventDefault();
+        console.log(event.target.id);
+    });
+}
 
 function watchNav(){
     let nav = document.getElementById("nav-ul");
@@ -159,4 +190,3 @@ function init(){
 }
 
 validate();
-init();

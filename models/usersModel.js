@@ -49,6 +49,23 @@ const users = {
                 return err;
             });
     },
+    getTwoUsers: function(userName1, userName2) {
+        return usersCollection
+            .find({userName: userName1})
+            .then(firstUser => {
+                return usersCollection
+                .find({userName: userName2})
+                .then(secondUser => {
+                    return [firstUser[0], secondUser[0]];
+                })
+                .catch(err => {
+                    return err;
+                });
+            })
+            .catch(err => {
+                return err;
+            }); 
+    },
     createUser: function(userInfo) {
         return usersCollection
             .create(userInfo)
@@ -74,6 +91,23 @@ const users = {
             .updateOne(userName, userChanges)
             .then(updatedUser => {
                 return updatedUser;
+            })
+            .catch(err => {
+                return err;
+            });
+    },
+    updateTwoUsers: function(userName, userChanges, userName2, userChanges2) {
+        return usersCollection
+            .updateOne(userName, userChanges)
+            .then(updatedUser => {
+                return usersCollection
+                .updateOne(userName2, userChanges2)
+                .then(secondUser => {
+                    return [updatedUser[0], secondUser[0]];
+                })
+                .catch(err => {
+                    return err;
+                });
             })
             .catch(err => {
                 return err;

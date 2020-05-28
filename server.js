@@ -83,6 +83,28 @@ app.get('/userbyId', (req, res) => {
         });
 });
 
+app.get('/twoUsers', (req, res) => {
+    let userName = req.query.userName;
+    let friendName = req.query.friendName;
+    if (!userName || !friendName) {
+        res.statusMesagge = "Two users are required";
+        return res.status(406).end();
+    }
+    users
+        .getTwoUsers(userName, friendName)
+        .then(result => {
+            console.log(result.length);
+            if (result.length === 0) {
+                res.statusMesagge = `Usernames not found`;
+                return res.status(404).end();
+            }
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
 
 //////////////////////////////////////////////////////////////
 //User register, validation, changes and delete
@@ -292,9 +314,7 @@ app.get('/notFriends', (req, res) => {
             return res.status(500).end();
         });
 });
-
 //Get all pending friends of user
-
 app.get('/pendingFriends', (req, res) => {
     let userName = req.query.userName;
     if (!userName) {
@@ -323,9 +343,7 @@ app.get('/pendingFriends', (req, res) => {
             return res.status(500).end();
         });
 });
-
 //Get all accepted friends
-
 app.get('/acceptedFriends', (req, res) => {
     let userName = req.query.userName;
     if (!userName) {
@@ -366,22 +384,24 @@ app.post('/userFriend', (req, res) => {
         res.statusMesagge = "Missing Id of friend";
         return res.status(406).end();
     }
-    let friendObj = {
-        friendName: queryfriendName,
-        status: 'Pending',
-        sender: userName
-    };
     users
-        .getUser({userName})
-        .then(mainUser => {
-            if (mainUser.length === 0) {
-                res.statusMesagge = `${userName} not found`;
+        .getTwoUsers(userName,queryfriendName)
+        .then(result => {
+            if (result.length === 0 || result.length === 1) {
+                res.statusMesagge = `Users not found`;
                 return res.status(404).end();
             }
-            mainUser[0].friendList.push(friendObj);
-            console.log(mainUser[0]);
+            result[0].friendList.push(
+                {friendName: queryfriendName,
+                status: 'Pending',
+                sender: userName }
+                );
+            result[1].friendList.push({
+                friendName: userName,
+                status: 'Pending',
+                sender: userName });
             return users
-                .updateUser({ userName: userName }, mainUser[0])
+                .updateTwoUsers({ userName: userName }, result[0],{ userName: queryfriendName }, result[1] )
                 .then(patched => {
                     return res.status(202).json(patched);
                 })
@@ -397,43 +417,7 @@ app.post('/userFriend', (req, res) => {
             return res.status(500).end();
         });
 });
-//Add summary
-app.post('/userSummary', (req, res) => {
-    let userName = req.query.userName;
-    let querySummary = req.query.summaryId;
-    if (!userName) {
-        res.statusMesagge = "Missing user field";
-        return res.status(406).end();
-    }
-    if (!querySummary) {
-        res.statusMesagge = "Missing Id of summary";
-        return res.status(406).end();
-    }
-    users
-        .getUser({ userName })
-        .then(mainUser => {
-            if (mainUser.length === 0) {
-                res.statusMesagge = `${userName} not found`;
-                return res.status(404).end();
-            }
-            console.log(mainUser[0]);
-            mainUser[0].summaryList.push(querySummary);
-            return users
-                .updateUser({ userName: userName }, mainUser[0])
-                .then(patched => {
-                    return res.status(202).json(patched);
-                })
-                .catch(err => {
-                    res.statusMessage = "Error with the database";
-                    return res.status(500).end();
-                });
-        })
-        .catch(err => {
-            console.log("This is the parent error")
-            res.statusMessage = "Error with the database";
-            return res.status(500).end();
-        });
-});
+
 // Accept a friend
 app.patch('/userFriend', (req, res) => {
     let userName = req.query.userName;
@@ -446,27 +430,26 @@ app.patch('/userFriend', (req, res) => {
         res.statusMesagge = "Missing Id of friend";
         return res.status(406).end();
     }
-    let friendObj = {
-        friendName: queryfriendName,
-        status: 'Accepted'
-    };
     users
-        .getUser({userName})
-        .then(mainUser => {
-            if (mainUser.length === 0) {
-                res.statusMesagge = `${userName} not found`;
+        .getTwoUsers(userName,queryfriendName)
+        .then(result => {
+            if (result.length === 0 || result.length === 1) {
+                res.statusMesagge = `Users not found`;
                 return res.status(404).end();
             }
-            let index = mainUser[0].friendList.findIndex(i => i.friendName == queryfriendName);
-            if (index == -1){
-                res.statusMessage = "Friend not found";
+            let index1 = result[0].friendList.findIndex(i => i.friendName == queryfriendName);
+            let index2 = result[1].friendList.findIndex(i => i.friendName == userName);
+            console.log(index1, index2);
+            
+            if (index1 == -1 || index2 == -1){
+                res.statusMessage = "Failed to find friends";
                 return res.status(404).end();
             }else{
-                mainUser[0].friendList[index] = friendObj;
+                result[0].friendList[index1] = {friendName: queryfriendName, status: 'Accepted'};
+                result[1].friendList[index2] = {friendName: userName, status: 'Accepted'};
             }
-            console.log(mainUser[0]);
             return users
-                .updateUser({ userName: userName }, mainUser[0])
+                .updateTwoUsers({ userName: userName }, result[0],{ userName: queryfriendName }, result[1] )
                 .then(patched => {
                     return res.status(202).json(patched);
                 })
@@ -482,6 +465,7 @@ app.patch('/userFriend', (req, res) => {
             return res.status(500).end();
         });
 });
+
 //Add friend to the summaries shared with friends
 app.patch('/shareToFriend', (req, res) => {
     let userName = req.query.userName;
@@ -513,6 +497,7 @@ app.patch('/shareToFriend', (req, res) => {
             return res.status(500).end();
         });
 });
+
 //Delete a friend
 app.delete('/userFriend', (req, res) => {
     let userName = req.query.userName;
@@ -558,6 +543,45 @@ app.delete('/userFriend', (req, res) => {
             return res.status(500).end();
         });
 });
+
+//Add summary
+app.post('/userSummary', (req, res) => {
+    let userName = req.query.userName;
+    let querySummary = req.query.summaryId;
+    if (!userName) {
+        res.statusMesagge = "Missing user field";
+        return res.status(406).end();
+    }
+    if (!querySummary) {
+        res.statusMesagge = "Missing Id of summary";
+        return res.status(406).end();
+    }
+    users
+        .getUser({ userName })
+        .then(mainUser => {
+            if (mainUser.length === 0) {
+                res.statusMesagge = `${userName} not found`;
+                return res.status(404).end();
+            }
+            console.log(mainUser[0]);
+            mainUser[0].summaryList.push(querySummary);
+            return users
+                .updateUser({ userName: userName }, mainUser[0])
+                .then(patched => {
+                    return res.status(202).json(patched);
+                })
+                .catch(err => {
+                    res.statusMessage = "Error with the database";
+                    return res.status(500).end();
+                });
+        })
+        .catch(err => {
+            console.log("This is the parent error")
+            res.statusMessage = "Error with the database";
+            return res.status(500).end();
+        });
+});
+
 //Delete a summary from a user
 app.delete('/userSummary', (req, res) => {
     let userName = req.query.userName;
