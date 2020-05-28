@@ -28,7 +28,7 @@ function validate(){
         .catch( err => {
             window.alert("Session expired. Redirecting");
             localStorage.removeItem('token');
-            window.location.href = "./pages/user_entry.html";
+            window.location.href = "./user_entry.html";
         });
 }
 
@@ -243,6 +243,9 @@ function watchNav(){
         console.log(event.target.id);
         if(event.target.id == "home"){
             window.location.href = "/pages/user.html";
+        }
+        if(event.target.id == "account"){
+            window.location.href = "/pages/account.html";
         }
         if(event.target.id == "post"){
             window.location.href = "/pages/post.html";

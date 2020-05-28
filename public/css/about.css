@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+*{ 
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1{
+    background-color: #CF0000;
+    padding: 20px;
+    margin: 0;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ul{
+    background-color : #1A1A1A;
+    list-style : none;
+    margin : 0;
+    padding : 0;
+    overflow : auto;
+}
+  
+li{
+    float : left;
+    padding : 20px;
+}
+
+li:hover{
+    cursor: pointer;
+    background-color: #555555;
+}
+
+section{
+    background-color: #1A1A1A;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+button{
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #555555;
+    background-color: #1A1A1A;
+    color: white;
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: #555555;
+}
+
+footer{
+    display: flex;
+    background-color: #1A1A1A;
+    padding: 0%;
+    margin: auto 0% 0 0;
+}
+
+.hidden{
+    display: none;
+}
+
+.nav-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}   
