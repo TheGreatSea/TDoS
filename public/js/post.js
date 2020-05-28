@@ -28,7 +28,7 @@ function validate(){
         .catch( err => {
             window.alert("Session expired. Redirecting");
             localStorage.removeItem('token');
-            window.location.href = "/pages/user_entry.html";
+            window.location.href = "./pages/user_entry.html";
         });
 }
 

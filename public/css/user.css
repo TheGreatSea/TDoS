@@ -136,25 +136,3 @@ footer{
     background-color: #1A1A1A;
     color: white;
 }
-
-@media(min-width: 600px) and (max-width:990px){
-    .feed{
-        margin-top: 10px;
-        margin-bottom: 10px;
-        width: 90%;
-    }
-  }
-
-
-@media (max-width:599px){
-    .feed{
-        margin-top: 10px;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-    input{
-        margin-left: 5%;
-        width: 60%;
-    }
-
-}

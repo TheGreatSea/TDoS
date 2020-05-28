@@ -7,38 +7,52 @@
         <link href="./../css/user_entry.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <h1>TDoS</h1>
-        <section id="login-sec">
-            <form id="login">
-                <h3>Login</h3>
-                <p> Username : </p>
-                <input type="text" id="usernameLogin">
-                <p> Password : </p>
-                <input type="password" id="passwordLogin">
-                <p id="login-message"></p>
-                <button type="submit" id="loginBtn"> Login</button>
-            </form>
-            <p>
-                <div id="showSignUp" class="links">Create an account</div>
-            </p>
+        <header>
+            <h1>TDoS: The DataBase Of Summaries</h1>
+        </header>
+        <section>
+            <nav>
+                <ul id="nav-ul">
+                    <li class="nav" id="home">Home</li>
+                    <li class="nav" id="account">Enter account</li>
+                    <li class="nav" id="about">About</li>
+                    <li class="nav" id="contact">Contact</li>
+                </ul>
+            </nav>
         </section>
-
-        <section id="signUp-sec" class="hidden">
-            <form id="sign-up">
-                <h3>Sign up</h3>
-                <p> Username : </p>
-                <input type="text" id="usernamesignUp">
-                <p> Password : </p>
-                <input type="password" id="passwordsignUp">
-                <p> Reapeat your password : </p>
-                <input type="password" id="passwordRepeatSignUp">
-                <p id="sign-message"></p>
-                <div>
-                    <button type="submit" id="signupBtn">Enter the world of summaries</button>
-                </div>
-            </form>
-        </section>     
-
+        <main>
+            <section id="login-sec" class="form-sec">
+                <form id="login">
+                    <h3>Login</h3>
+                    <p> Username : </p>
+                    <input type="text" id="usernameLogin" >
+                    <p> Password : </p>
+                    <input type="password" id="passwordLogin">
+                    <p id="login-message" class="mess"></p>
+                    <button type="submit" id="loginBtn"> Login</button>
+                    <div id="showSignUp" class="links">Not have an account? Create an account</div>
+                </form>
+            </section>
+    
+            <section id="signUp-sec" class="hidden form-sec">
+                <form id="sign-up">
+                    <h3>Sign up</h3>
+                    <p> Username : </p>
+                    <input type="text" id="usernamesignUp">
+                    <p> Password : </p>
+                    <input type="password" id="passwordsignUp">
+                    <p> Reapeat your password : </p>
+                    <input type="password" id="passwordRepeatSignUp">
+                    <p id="sign-message" class="mess"></p>
+                    <div>
+                        <button type="submit" id="signupBtn">Enter the world of summaries</button>
+                    </div>
+                </form>
+            </section> 
+        </main>
+        <footer>
+            This site was created by the one who summarizes it all. His name is Robob, the Robot. Have a good day.
+        </footer>
         <script src ="./../js/user_entry.js" type = "text/javascript"></script>
     </body>
 </html>

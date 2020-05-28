@@ -28,6 +28,7 @@ h2{
     justify-content: center;
     background-color: #CF0000;
     padding: 20px;
+    border-radius: 10px;
 }
 h3{
     display: flex;
@@ -35,6 +36,7 @@ h3{
     width: 50%;
     justify-content: center;
     align-content: flex-start;
+    border: 20px;
 }
 
 main{
@@ -52,6 +54,7 @@ form{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    border-radius: 10px;
 }
 
 ul{
@@ -181,8 +184,9 @@ textarea{
     margin-right: 10px;
     float: left;
 }
-
-
+.btn{
+    width: 30%;
+}
 @media(min-width: 600px) and (max-width:990px){
     form{
         margin-top: 10px;
@@ -196,7 +200,6 @@ textarea{
         width: 80%;
     }
 }
-
 
 @media (max-width:599px){
     form{
