@@ -29,6 +29,28 @@ h1{
     margin: 0;
 }
 
+
+table{
+    width: 30%;
+    background-color: #1A1A1A;
+    border : 0px;
+    border-radius: 20px;
+    border-collapse : collapse;
+}
+ 
+td, th{
+    margin: 10px;
+    padding: 10px;
+    border :0px solid #f4f4f4;
+}
+
+.tables{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
 main{
     display: flex;
     flex-direction: column;
@@ -64,6 +86,13 @@ section{
     align-items: center;
 }
 
+#population{
+    background-color: black;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
 table{
     width: 100%;
     background-color: #1A1A1A;
@@ -89,6 +118,9 @@ button{
 button:hover{
     cursor: pointer;
     background-color: #555555;
+}
+.containers{
+    margin: 10px;
 }
 
 footer{
@@ -124,11 +156,6 @@ footer{
     justify-content: flex-start;
     align-items: flex-start;
 }   
-
-.feed{
-    margin: 10px;
-    width: 70%;
-}
 
 .summary-nav{
     display: flex;

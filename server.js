@@ -511,22 +511,25 @@ app.delete('/userFriend', (req, res) => {
         return res.status(406).end();
     }
     users
-        .getUser({ userName })
-        .then(mainUser => {
-            if (mainUser.length === 0) {
-                res.statusMesagge = `${userName} not found`;
+        .getTwoUsers(userName,queryfriendName)
+        .then(result => {
+            if (result.length === 0 || result.length === 1) {
+                res.statusMesagge = `Users not found`;
                 return res.status(404).end();
             }
-            let index = mainUser[0].friendList.findIndex(i => i.friendName == queryfriendName);
-            if (index == -1){
-                res.statusMessage = "Friend not found";
+            let index1 = result[0].friendList.findIndex(i => i.friendName == queryfriendName);
+            let index2 = result[1].friendList.findIndex(i => i.friendName == userName);
+            console.log(index1, index2);
+            
+            if (index1 == -1 || index2 == -1){
+                res.statusMessage = "Failed to find friends";
                 return res.status(404).end();
             }else{
-                mainUser[0].friendList.splice(index, 1);
+                result[0].friendList.splice(index1,1);
+                result[1].friendList.splice(index2,1);
             }
-            console.log(mainUser[0]);
             return users
-                .updateUser({ userName: userName }, mainUser[0])
+                .updateTwoUsers({ userName: userName }, result[0],{ userName: queryfriendName }, result[1] )
                 .then(patched => {
                     return res.status(202).json(patched);
                 })
@@ -535,7 +538,6 @@ app.delete('/userFriend', (req, res) => {
                     res.statusMessage = "Error with the database";
                     return res.status(500).end();
                 });
-            //return res.status(200).json(mainUser);
         })
         .catch(err => {
             console.log("This is the parent error")

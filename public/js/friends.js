@@ -8,6 +8,15 @@ let users = [];
 let friends = [];
 let pending = [];
 
+
+///Shuffle method and pseudocode obtained from : https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 function validate(){
     let url = `/users/validate-token`;
     let settings = {
@@ -40,18 +49,88 @@ function validate(){
 
 function populatePending(){
     console.log("Populating pending");
-    let secPending = document.getElementById("secPending");
+    let section = document.getElementById("secPending");
     if(pending.length != 0){
+        document.getElementById("tit_pen").classList.remove("hidden");
         for(let i = 0; i< pending.length;i++){
             if (pending[i].sender == userName){
-                secPending.innerHTML += `
-                
-                
+                section.innerHTML += `
+                <div class="containers">
+                <table>
+                    <tr>
+                        <td rowspan="2">${pending[i].friendName}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="button" id="del_${pending[i].friendName}" class="Delete">Delete</button></td>
+                    </tr>
+                </table>
+                </div>
                 `;
             }
             else{
-
+                section.innerHTML += `
+                <div class="containers">
+                <table>
+                    <tr>
+                        <td rowspan="2">${pending[i].friendName}</td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="acc_${pending[i].friendName}" class="Accept">Accept</button></td>
+                        <td><button type="button" id="del_${pending[i].friendName}" class="Delete">Delete</button></td>
+                    </tr>
+                </table>
+                </div>
+                `;
             }
+        }
+    }
+}
+
+function populateFriends(){
+    console.log("Populating friends");
+    let section = document.getElementById("secFriends");
+    shuffleArray(friends);
+    if(friends.length != 0){
+        document.getElementById("tit_fri").classList.remove("hidden");
+        for(let i = 0; i< friends.length;i++){
+                section.innerHTML += `
+                <div class="containers">
+                <table>
+                    <tr>
+                        <td rowspan="2">${friends[i].friendName}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="button" id="del_${friends[i].friendName}" class="Delete">Delete</button></td>
+                    </tr>
+                </table>
+                </div>
+                `;
+        }
+    }
+}
+
+function populateNotFriends(){
+    console.log("Populating not friends");
+    let section = document.getElementById("secNotFriends");
+    shuffleArray(users);
+    if(users.length != 0){
+        document.getElementById("tit_not").classList.remove("hidden");
+        for(let i = 0; i< users.length;i++){
+                section.innerHTML += `
+                <div class="containers">
+                <table>
+                    <tr>
+                        <td rowspan="2">${users[i]}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="button" id="add_${users[i]}" class="Add">Add</button></td>
+                    </tr>
+                </table>
+                </div>
+                `;
         }
     }
 }
@@ -60,9 +139,9 @@ function populate(){
     console.log(users);
     console.log(friends);
     console.log(pending);
-    let secFriends = document.getElementById("secFriends");
-    let secNotFriends = document.getElementById("secNotFriends");
-
+    populatePending();
+    populateFriends();
+    populateNotFriends();
 }
 
 function getFriends(){
@@ -187,6 +266,7 @@ function watchNav(){
 function init(){
     watchNav();
     getNotFriends();
+    watchPopulation();
 }
 
 validate();
