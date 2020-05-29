@@ -436,11 +436,56 @@ function watchNav(){
     });
 }
 
+
+function changePassword(){
+    let password = document.getElementById("password").value;
+    let user = {
+        userName : userName,
+        newPassword : password
+    }
+
+    let url = `/users/changePassword`;
+    let settings = {
+        method : 'POST',
+        headers : { 
+            Authorization : `Bearer ${API_KEY}`,
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify( user )
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log(responseJSON);
+            localStorage.removeItem('token');
+            window.location.href = "./user_entry.html";    
+        })
+        .catch( err => {
+            alert("ERROR: " + err.message);
+            console.log(err.message);
+        });
+    
+}
+
+function watchChangePassword(){
+    let btn = document.getElementById("btn-pass");
+    btn.addEventListener('click',(event)=>{
+        event.preventDefault();
+        changePassword();
+    });
+}
+
 function init(){
     watchNav();
     watchMain()
     getPublicFeed();
     watchFeedBtn();
     watchFilter();
+    watchChangePassword();
 }
 validate();

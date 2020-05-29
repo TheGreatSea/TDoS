@@ -223,7 +223,7 @@ app.post('/users/changePassword',jsonParser, (req, res) =>{
         .getUser({userName})
         .then( user =>{
             if (user){
-                bcrypt.hash(userPassword, 10)
+                bcrypt.hash(newPassword, 10)
                     .then(hashedPassword => {
                         let updateUser = {
                             userName: userName,
