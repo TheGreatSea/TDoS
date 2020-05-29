@@ -5,6 +5,32 @@ let userName = "";
 let id = "";
 let friendList = [];
 
+function getFriends(){
+    let url = `/acceptedFriends?userName=${userName}`;
+    let settings = {
+        method : 'GET',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Done friends");
+            friendList = responseJSON;
+            console.log(friendList);
+        })
+        .catch( err => {
+            window.alert("Problem finding list of friends.");
+            location.reload();
+        });
+}
+
 function validate(){
     let url = `/users/validate-token`;
     let settings = {
@@ -24,8 +50,8 @@ function validate(){
         .then(responseJSON =>{
             userName = responseJSON.userName;
             id = responseJSON.id;
-            friendList = responseJSON.friendList;
             console.log(responseJSON);
+            getFriends();
         })
         .catch( err => {
             window.alert("Session expired. Redirecting");
@@ -99,7 +125,6 @@ function doSummary(text, num_sentences){
         });
 }
 
-
 function createSummary(){
     let title = document.getElementById("title").value;
     let source = document.getElementById("source").value;
@@ -117,18 +142,22 @@ function createSummary(){
     }
     for(let i = 0; i < share.length; i++){
         if(share[i].checked == true){
-            share = share[i].value;
+            share = [share[i].value];
             break;
         }
     }
-    if (share[0] == "friends")
-        share = share.concat(friendList);
+    if (share[0] == "friends"){
+        for(let i = 0; i < friendList.length; i++){
+            share.push(friendList[i].friendName);
+        }
+    }
+    
     let summaryobj = {
         summaryCreator: userName,
         summaryName: title,
         summarySource: source,
         summaryTags: tags_Array,
-        share: [share],
+        share: share,
         summary: body 
     }
     console.log(summaryobj);
@@ -185,7 +214,6 @@ function addSummaryToUser(name, summaryId){
             console.log(err.message);
         });
 }
-
 
 function watchGetSummaryButton(){
     let button = document.getElementById("getSummary");

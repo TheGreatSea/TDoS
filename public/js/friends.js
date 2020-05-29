@@ -70,6 +70,7 @@ function sendRequest(userName, friendName){
             alert("Error: " + err.message);
         });
 }
+
 function confirmRequest(userName, friendName){
     let url = `/userFriend?userName=${userName}&friendName=${friendName}`;
     let settings = {
@@ -94,6 +95,7 @@ function confirmRequest(userName, friendName){
             alert("Error: " + err.message);
         });
 }
+
 function shareSummaries(userName, friendName){
     console.log("Beggining to do this");
     let url = `/shareToFriend?userName=${userName}&friendName=${friendName}`;
@@ -120,6 +122,34 @@ function shareSummaries(userName, friendName){
             alert("Error: " + err.message);
         });
 }
+
+function unshareSummaries(userName, friendName){
+    console.log("Beggining to do this");
+    let url = `/unshareToFriend?userName=${userName}&friendName=${friendName}`;
+    let settings = {
+        method : 'DELETE',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Sharing summaries");
+            //shareSummaries(userName, friendName);
+            location.reload();
+        })
+        .catch( err => {
+            console.log("This is the error");
+            alert("Error: " + err.message);
+        });
+}
+
 function deleteFriend(userName, friendName){
     let url = `/userFriend?userName=${userName}&friendName=${friendName}`;
     let settings = {
@@ -137,7 +167,7 @@ function deleteFriend(userName, friendName){
         })
         .then(responseJSON =>{
             console.log("Friend deleted");
-            location.reload();
+            unshareSummaries(userName, friendName);
         })
         .catch( err => {
             alert("Error: " + err.message);
@@ -147,6 +177,8 @@ function deleteFriend(userName, friendName){
 function populatePending(pending_Array){
     console.log("Populating pending");
     let section = document.getElementById("secPending");
+    document.getElementById("tit_pen").classList.add("hidden");
+    section.innerHTML = "";
     if(pending_Array.length != 0){
         document.getElementById("tit_pen").classList.remove("hidden");
         for(let i = 0; i< pending_Array.length;i++){
@@ -187,6 +219,8 @@ function populatePending(pending_Array){
 function populateFriends(friends_Array){
     console.log("Populating friends");
     let section = document.getElementById("secFriends");
+    document.getElementById("tit_fri").classList.add("hidden");
+    section.innerHTML = "";
     shuffleArray(friends_Array);
     if(friends_Array.length != 0){
         document.getElementById("tit_fri").classList.remove("hidden");
@@ -211,6 +245,8 @@ function populateFriends(friends_Array){
 function populateNotFriends(not_Array){
     console.log("Populating not friends");
     let section = document.getElementById("secNotFriends");
+    document.getElementById("tit_not").classList.add("hidden");
+    section.innerHTML = "";
     shuffleArray(not_Array);
     if(not_Array.length != 0){
         document.getElementById("tit_not").classList.remove("hidden");
@@ -320,6 +356,45 @@ function getNotFriends(){
         });
 }
 
+function watchFilter(){
+    let form = document.getElementById("filter-form");
+    form.addEventListener('submit',(event)=>{
+        event.preventDefault();
+        let filter_value = String(document.getElementById("filter-value").value);
+        console.log(filter_value);
+        if(filter_value == ""){
+            populate();
+        }
+        else{
+            filter_value = filter_value.toLowerCase();
+            let pending_arr = [];
+            let friends_arr = [];
+            let not_arr = [];
+            for(let i = 0; i < pending.length; i++){
+                let str = String(pending[i].friendName).toLowerCase();
+                if(str.includes(filter_value)){
+                    pending_arr.push(pending[i]);
+                }
+            }
+            for(let i = 0; i < friends.length; i++){
+                let str = String(friends[i].friendName).toLowerCase();
+                if(str.includes(filter_value)){
+                    friends_arr.push(friends[i]);
+                }
+            }
+            for(let i = 0; i < users.length; i++){
+                let str = String(users[i]).toLowerCase();
+                if(str.includes(filter_value)){
+                    not_arr.push(users[i]);
+                }
+            }
+            populatePending(pending_arr);
+            populateFriends(friends_arr);
+            populateNotFriends(not_arr);
+        }
+    });
+}
+
 function watchPopulation(){
     let sec = document.getElementById("population");
     sec.addEventListener('click', (event) => {
@@ -374,6 +449,7 @@ function watchNav(){
 
 function init(){
     watchNav();
+    watchFilter();
     getNotFriends();
     watchPopulation();
 }

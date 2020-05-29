@@ -4,10 +4,10 @@
     box-sizing: border-box;
 }
 
-span{
+#log_out{
     text-decoration: underline;
 }
-span:hover{
+#log_out:hover{
     color: #CF0000;
     cursor: pointer;
 }

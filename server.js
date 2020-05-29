@@ -560,6 +560,56 @@ app.delete('/userFriend', (req, res) => {
         });
 });
 
+//Delete a friend from shared summaries
+app.delete('/unshareToFriend', (req, res) => {
+    let userName = req.query.userName;
+    let queryfriendName = req.query.friendName;
+    if (!userName) {
+        res.statusMesagge = "Missing user field";
+        return res.status(406).end();
+    }
+    if (!queryfriendName) {
+        res.statusMesagge = "Missing Id of friend";
+        return res.status(406).end();
+    }
+    summaries
+        .getTwoSummaries(userName, queryfriendName)
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `Summaries not found`;
+                return res.status(404).end();
+            }
+            for(let i = 0; i < result.length ; i++){
+                if (result[i].share[0] == "friends"){
+                    if(result[i].summaryCreator ==  userName){
+                        index = result[i].share.indexOf(queryfriendName);
+                        if(index != -1)
+                            result[i].share.splice(index, 1);
+                    }
+                    else if(result[i].summaryCreator ==  queryfriendName){
+                        index = result[i].share.indexOf(userName);
+                        if(index != -1)
+                            result[i].share.splice(index, 1);
+                    }
+                    summaries
+                        .updateSummary({id : result[i].id},result[i])
+                            .then(result => {
+                                console.log(result);
+                            })
+                            .catch(err => {
+                                res.statusMessage = "Error with the database" + err.message;
+                                return res.status(500).end();
+                            });      
+                }
+            }
+            return res.status(200).json(result);
+        })
+        .catch(err => {
+            res.statusMessage = "Error with the database" + err.message;
+            return res.status(500).end();
+        });
+});
+
 //Add summary
 app.post('/userSummary', (req, res) => {
     let userName = req.query.userName;
@@ -579,7 +629,6 @@ app.post('/userSummary', (req, res) => {
                 res.statusMesagge = `${userName} not found`;
                 return res.status(404).end();
             }
-            console.log(mainUser[0]);
             mainUser[0].summaryList.push(querySummary);
             return users
                 .updateUser({ userName: userName }, mainUser[0])
@@ -743,7 +792,6 @@ app.get('/summaryPublic', (req, res) => {
 
 app.post('/summary', jsonParser, (req, res) => {
     console.log("Adding a new summary");
-    console.log("Body ", req.body);
     let {summaryCreator, summaryName, summarySource, summaryTags, share, summary } = req.body;
     if (!summaryName || !summarySource || !summaryTags || !summary || !summaryCreator || !share) {
         res.statusMessage = "Missing Fields";
