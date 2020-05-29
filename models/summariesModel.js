@@ -93,13 +93,13 @@
         return summariesCollection
             .find({share: { $all : [userName] } } )
             .then(friendFeed => {
-                //return secondaryFeed;
                 return summariesCollection
                     .find({share: { $all : ["public"] } })
                     .then(publicFeed => {
                         return summariesCollection
                             .find({summaryCreator : userName, share: ["private"]} )
                             .then(privateFeed => {
+                                console.log(privateFeed);
                                 let array = friendFeed.concat(publicFeed);
                                 array = array.concat(privateFeed);
                                 return array;

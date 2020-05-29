@@ -303,7 +303,6 @@ function getFriends(){
         });
 }
 
-
 function getPending(){
     let url = `/pendingFriends?userName=${userName}`;
     let settings = {

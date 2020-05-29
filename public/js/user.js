@@ -282,14 +282,125 @@ function watchFilter() {
     });
 }
 
+function deleteSummary(summaryId){
+    let url = `/summary?summaryId=${summaryId}`;
+    let settings = {
+        method : 'DELETE',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Summary deleted");
+            deleteSummaryFromUser(summaryId);
+        })
+        .catch( err => {
+            alert("Error: " + err.message);
+        });
+}
+
+function deleteSummaryFromUser(summaryId){
+    let url = `/userSummary?userName=${userName}&summaryId=${summaryId}`;
+    let settings = {
+        method : 'DELETE',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Summary deleted from user summaryList");
+            location.reload();
+        })
+        .catch( err => {
+            alert("Error: " + err.message);
+        });
+}
+
+function saveSummary(summaryId){
+    console.log("Saving summary");
+    let url = `/userSaveSummary?userName=${userName}&summaryId=${summaryId}`;
+    let settings = {
+        method : 'POST',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Summary saved");
+            addSummaryToUser(responseJSON.id);
+        })
+        .catch( err => {
+            alert("Error: " + err.message);
+        });
+}
+
+function addSummaryToUser(summaryId){
+    let url = `/userSummary?userName=${userName}&summaryId=${summaryId}`;
+    let settings = {
+        method : 'POST',
+        headers : {
+            Authorization : `Bearer ${API_KEY}`,
+        }
+    }
+    fetch(url,settings)
+        .then(response =>{
+            if (response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(responseJSON =>{
+            console.log("Summary added to user summaryList");
+            location.reload();
+        })
+        .catch( err => {
+            alert("Error: " + err.message);
+        });
+}
+
+function editSummary(summaryId){
+    localStorage.setItem('summaryId', String(summaryId));
+    window.location.href = "./post.html";
+}
+
 function watchMain(){
     let main = document.getElementById("main");
     main.addEventListener('click',(event) =>{
         event.preventDefault();
         let str = String(event.target.id);
         let tipo = str.substring(0,3);
-        let name = str.substring(4)
-        console.log(tipo, name);
+        let summaryId = str.substring(4)
+        console.log(tipo, summaryId);
+        if(tipo == "del"){
+            deleteSummary(summaryId);
+        }
+        else if(tipo == "edi"){
+            editSummary(summaryId);
+        }
+        else if(tipo == "sav"){
+            saveSummary(summaryId);
+        }
     });
 }
 

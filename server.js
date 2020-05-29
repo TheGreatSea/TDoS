@@ -589,7 +589,7 @@ app.delete('/unshareToFriend', (req, res) => {
         });
 });
 
-//Add summary
+//Add summary to user summaryList
 app.post('/userSummary', (req, res) => {
     let userName = req.query.userName;
     let querySummary = req.query.summaryId;
@@ -639,18 +639,31 @@ app.post('/userSaveSummary', (req, res) => {
         return res.status(406).end();
     }
     summaries
-        .getSummary({id : summaryId})
+        .getSummary({id : querySummary})
         .then(result => {
             if (result.length === 0) {
                 res.statusMesagge = `Summary not found`;
                 return res.status(404).end();
             }
-            result[0].summaryCreator = userName;
-            result[0].share = ["Private"];
+            let newSummary = {
+                id: uuid.v4(),
+                summaryCreator: userName,
+                summaryName: result[0].summaryName,
+                summarySource: result[0].summarySource,
+                summaryTags: result[0].summaryTags,
+                share: ["private"],
+                summary: result[0].summary,
+                date: Date.now()
+            }
+            console.log(newSummary);
             return summaries
-                .updateSummary({ id: summaryId }, result[0])
-                .then(patched => {
-                    return res.status(202).json(patched);
+                .createSummary(newSummary)
+                .then(created => {
+                    if (created.errmsg) {
+                        res.statusMessage = "Error creating the summary";
+                        return res.status(409).end();
+                    }
+                    return res.status(202).json(created);
                 })
                 .catch(err => {
                     res.statusMessage = "Error with the database" + err.message;
@@ -664,8 +677,7 @@ app.post('/userSaveSummary', (req, res) => {
         });
 });
 
-
-//Delete a summary from a user
+//Delete a summary from a user SummaryList
 app.delete('/userSummary', (req, res) => {
     let userName = req.query.userName;
     let querySummary = req.query.summaryId;
@@ -684,13 +696,13 @@ app.delete('/userSummary', (req, res) => {
                 res.statusMesagge = `${userName} not found`;
                 return res.status(404).end();
             }
-            console.log(mainUser[0]);
+            console.log(mainUser[0].summaryList);
             let index = mainUser[0].summaryList.indexOf(querySummary);
             if (index == -1) {
                 res.statusMessage = "Summary not found";
                 return res.status(404).end();
             } else {
-                mainUser.summaryList.splice(index, 1);
+                mainUser[0].summaryList.splice(index, 1);
             }
             return users
                 .updateUser({ userName: userName }, mainUser[0])
