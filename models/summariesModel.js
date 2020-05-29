@@ -63,7 +63,7 @@
     },
     getSummarybyCreator: function(creatorId) {
         return summariesCollection
-            .find({summaryCreator : creatorId})
+            .find(creatorId)
             .then(foundSummary => {
                 return foundSummary;
             })
@@ -97,7 +97,7 @@
                     .find({share: { $all : ["public"] } })
                     .then(publicFeed => {
                         return summariesCollection
-                            .find({summaryCreator : userName, share: ["private"]} )
+                            .find({$or: [{summaryCreator : userName, share: ["private"]}, {summaryCreator : userName, share: ["friends"]} ]  } )
                             .then(privateFeed => {
                                 console.log(privateFeed);
                                 let array = friendFeed.concat(publicFeed);

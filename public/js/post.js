@@ -52,6 +52,7 @@ function validate(){
             id = responseJSON.id;
             console.log(responseJSON);
             getFriends();
+            init();
         })
         .catch( err => {
             window.alert("Session expired. Redirecting");
@@ -181,7 +182,7 @@ function createSummary(){
         .then(responseJSON =>{
             console.log(responseJSON);
             addSummaryToUser(userName, responseJSON.id);
-            //window.location.href = "/index.html";    
+            window.location.href = "./user.html";    
         })
         .catch( err => {
             message.innerHTML = err.message;
@@ -303,15 +304,12 @@ function watchNav(){
 function init() {
     watchNav();
     watchCreateButton()
-    watchGetSummaryButton();
-    watchDoSummaryButton();
     watchAddTag();
 }
 
 
 
 validate();
-init();
 
 /*
 */

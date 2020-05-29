@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
-
 *{ 
     box-sizing: border-box;
 }
-
 
 span{
     text-decoration: underline;
@@ -12,7 +10,6 @@ span:hover{
     color: #CF0000;
     cursor: pointer;
 }
-
 
 body{
     font-family: 'Open Sans', sans-serif;
@@ -66,6 +63,34 @@ section{
     align-items: center;
 }
 
+table{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #1A1A1A;
+    border : 0px;
+    border-radius: 20px;
+    border-collapse : collapse;
+}
+ 
+td, th{
+    margin: auto;
+    padding: 10px;
+    border :0px solid #f4f4f4;
+}
+
+thead{
+    display: flex;
+    justify-content: center;
+}
+
+tfoot{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
 button{
     margin: 10px;
     padding: 20px;
@@ -79,6 +104,11 @@ button:hover{
     background-color: #555555;
 }
 
+.saveBtn{
+    margin: 0;
+    padding: 5px;
+}
+
 footer{
     display: flex;
     background-color: #1A1A1A;
@@ -90,9 +120,107 @@ footer{
     display: none;
 }
 
+.tags{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info{
+    text-align: center;
+    width: 10%;
+}
+
+.info_dump{
+    text-align: justify;
+}
+
 .nav-div{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-}   
+}  
+
+.feed{
+    margin: 10px;
+    width: 70%;
+}
+
+.summary-nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter{
+    margin: 10px;
+    padding: 5px;
+    border: 0px;
+    background-color: #1A1A1A;
+    color: white;
+}
+
+h2{
+    display: flex;
+    margin: auto;
+    width: 50%;
+    justify-content: center;
+    background-color: #CF0000;
+    padding: 20px;
+    border-radius: 10px;
+}
+h3{
+    display: flex;
+    margin: 0;
+    width: 100%;
+    justify-content: center;
+    align-content: flex-start;
+    border: 20px;
+}
+.pass-sec{
+    background-color: #1A1A1A;
+    padding: auto;
+    margin: 30px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+}
+.pass-input{
+    width: 100%;
+}
+div{
+    background-color: #1A1A1A;
+}
+
+@media(min-width: 600px) and (max-width:990px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+  }
+
+
+@media (max-width:599px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    input{
+        margin-left: 5%;
+        width: 50%;
+    }
+    li{
+        float : left;
+        padding : 10px;
+    }
+    .pass-input{
+        width: 70%;
+    }
+}

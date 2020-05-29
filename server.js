@@ -768,7 +768,7 @@ app.get('/summaryByCreator', (req, res) => {
         return res.status(406).end();
     }
     summaries
-        .getSummarybyCreator(creatorId)
+        .getSummarybyCreator({summaryCreator : creatorId})
         .then(result => {
             if (result.length === 0) {
                 res.statusMesagge = `${creatorId} summaries not found`;
@@ -874,18 +874,18 @@ app.delete('/summary', (req, res) => {
 });
 
 app.patch('/summary', jsonParser, (req, res) => {
-    let { id, summaryCreator, summaryName, summarySource, summaryTags, share, summary  } = req.body;
+    let {summaryCreator, summaryName, summarySource, summaryTags, share, summary } = req.body;
+    if (!summaryName || !summarySource || !summaryTags || !summary || !summaryCreator || !share) {
+        res.statusMessage = "Missing Fields";
+        res.status(406).end();
+    }
     let summaryId = req.query.summaryId;
     if (!summaryId) {
         res.statusMessage = "SummaryId was not sent in request";
         return res.status(406).end();
     }
-    if (id !== summaryId) {
-        res.statusMessage = "The ids do not match";
-        return res.status(409).end();
-    }
     let data = {
-        id: String(id),
+        id: String(summaryId),
         summaryCreator : String(summaryCreator),
         summaryName: String(summaryName),
         summarySource: String(summarySource),
@@ -897,7 +897,7 @@ app.patch('/summary', jsonParser, (req, res) => {
     console.log(data);
 
     summaries
-        .updateUser({ id: id }, data)
+        .updateSummary({ id: summaryId }, data)
         .then(result => {
             return res.status(202).json(result);
         })

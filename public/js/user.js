@@ -381,7 +381,7 @@ function addSummaryToUser(summaryId){
 
 function editSummary(summaryId){
     localStorage.setItem('summaryId', String(summaryId));
-    window.location.href = "./post.html";
+    window.location.href = "./edit.html";
 }
 
 function watchMain(){

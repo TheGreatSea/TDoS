@@ -21,12 +21,38 @@
                     <li class="nav" id="contact">Contact</li>
                 </ul>
             </nav>
+            <div class="nav-div">
+                <form id="filter-form">
+                    <input type="text" size="50" id="filter-value" placeholder="Search">
+                    <select name="filter" id="filter-field">
+                        <option value="Title" selected="selected">Title</option>
+                        <option value="Creator">Creator</option>
+                        <option value="Source">Source</option>
+                        <option value="Tags">Tags</option>
+                        <option value="Summary">Summary</option>
+                    </select>
+                    <button type="submit" class="filter">Search</button>
+                </form>
+            </div>
         </section>
+        
         <main id="main">          
         </main>
+        <div class="summary-nav">
+            <button type="button" id="prev"> << </button> 
+            <button type="button" id="next"> >> </button>
+        </div> 
+
+        <section class="pass-sec"> 
+            <h3>Change password</h3>
+            <div>
+                <label for="password">New password</label>
+                <input type="password" id="password" class="pass-input">
+            </div>
+            <button type="submit" class="filter">Change password</button>
+        </section>
         <footer>
-            This site was created by the one who summarizes it all. His name is Robob, the Robot. Have a good day.
-            <span id="log_out">Log out</span>
+            This site was created by the one who summarizes it all. His name is Robob, the Robot. Have a good day. <span id="log_out">Log out</span>
         </footer>
         <script src ="./../js/account.js" type = "text/javascript"></script>
     </body>

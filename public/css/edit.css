@@ -4,6 +4,15 @@
     box-sizing: border-box;
 }
 
+#log_out{
+    text-decoration: underline;
+}
+#log_out:hover{
+    color: #CF0000;
+    cursor: pointer;
+}
+
+
 body{
     font-family: 'Open Sans', sans-serif;
     background-color: black;
@@ -21,10 +30,40 @@ h1{
     margin: 0;
 }
 
+h2{
+    display: flex;
+    margin: auto;
+    width: 50%;
+    justify-content: center;
+    background-color: #CF0000;
+    padding: 20px;
+    border-radius: 10px;
+}
+h3{
+    display: flex;
+    margin: 0;
+    width: 50%;
+    justify-content: center;
+    align-content: flex-start;
+    border: 20px;
+}
+
 main{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 10px;
+}
+form{
+    background-color: #1A1A1A;
+    width: 50%;
+    padding: 5%;
+    padding-top: 2.5%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border-radius: 10px;
 }
 
 ul{
@@ -58,12 +97,25 @@ section{
 
 button{
     margin: 10px;
-    padding: 20px;
+    margin-left: 0;
+    padding: 0.5%;
     border: 1px solid #555555;
     background-color: #1A1A1A;
     color: white;
+    width: 80px;
 }
-
+.simple{
+    margin: 10px;
+    padding: 0.1%;
+    border: 0px solid #555555;
+    background-color: #1A1A1A;
+    color: white;
+    width: 5%;
+}
+p{
+    margin: 10px;
+    margin-left: 0;
+}
 button:hover{
     cursor: pointer;
     background-color: #555555;
@@ -75,14 +127,93 @@ footer{
     padding: 0%;
     margin: auto 0% 0 0;
 }
+label{
+    padding: 5%;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+}
 
 .hidden{
     display: none;
 }
-
-.nav-div{
+.share-div{
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-}   
+    flex-wrap: wrap;
+}
+
+.inner{
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
+}
+.tags{
+    margin: 1%;
+    margin-left: 0;
+}
+#tags-container{
+    margin: auto;
+    margin-left: 0;
+    padding: auto;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#tag-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#quantity{
+    width: 40px;
+}
+#linktext,#title,#source{
+    width: 100%;
+}
+div{
+    width: 100%;
+    margin: 0;
+}
+textarea{
+    width: 100%;
+    margin: 0;
+}
+
+.radio{
+    margin-top: 5px;
+    margin-left: 0;
+    margin-right: 10px;
+    float: left;
+}
+.btn{
+    width: 30%;
+}
+@media(min-width: 600px) and (max-width:990px){
+    form{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 80%;
+    }
+    h2{
+        width: 80%;
+    }
+    h3{
+        width: 80%;
+    }
+}
+
+@media (max-width:599px){
+    form{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    h2{
+        width: 100%;
+    }
+    h3{
+        width: 100%;
+    }
+}
