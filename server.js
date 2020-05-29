@@ -5,8 +5,9 @@ const uuid = require('uuid');
 const morgan = require('morgan');
 const authorization = require('./middleware/authorization');
 const app = express();
+const morgan = require('morgan');
 
-//const cors = require('./middleware/cors');
+const cors = require('./middleware/cors');
 const { DATABASE_URL, PORT, SECRET_TOKEN } = require('./config');
 
 const bcrypt = require('bcryptjs');
@@ -17,8 +18,7 @@ const mongoose = require('mongoose')
 const { users } = require('./models/usersModel')
 const { summaries } = require('./models/summariesModel')
 
-//app.use(cors);
-
+app.use(cors);
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(authorization);
