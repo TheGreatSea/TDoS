@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 span{
     text-decoration: underline;
 }
@@ -65,6 +66,8 @@ section{
 }
 
 table{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     background-color: #1A1A1A;
     border : 0px;
@@ -73,9 +76,21 @@ table{
 }
  
 td, th{
-    margin: 10px;
+    margin: auto;
     padding: 10px;
     border :0px solid #f4f4f4;
+}
+
+thead{
+    display: flex;
+    justify-content: center;
+}
+
+tfoot{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 button{
@@ -89,6 +104,11 @@ button{
 button:hover{
     cursor: pointer;
     background-color: #555555;
+}
+
+.saveBtn{
+    margin: 0;
+    padding: 5px;
 }
 
 footer{
@@ -123,7 +143,7 @@ footer{
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-}   
+}  
 
 .feed{
     margin: 10px;
@@ -143,4 +163,29 @@ footer{
     border: 0px;
     background-color: #1A1A1A;
     color: white;
+}
+
+@media(min-width: 600px) and (max-width:990px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+  }
+
+
+@media (max-width:599px){
+    .feed{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    input{
+        margin-left: 5%;
+        width: 50%;
+    }
+    li{
+        float : left;
+        padding : 10px;
+    }
 }

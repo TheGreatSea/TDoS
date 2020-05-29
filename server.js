@@ -258,27 +258,6 @@ app.post('/users/changePassword',jsonParser, (req, res) =>{
         });
 });
 
-app.delete('/users/:userName', (req, res) => {
-    let UserName = req.params.userName;
-    console.log(UserName)
-    if (!UserName) {
-        res.statusMessage = "Missing UserName";
-        return res.status(406).end();
-    }
-    users
-        .deleteUser({ UserName })
-        .then(result => {
-            if (result.deletedCount === 0) {
-                res.statusMessage = "The user was not found. Critical Error";
-                return res.status(404).end();
-            }
-            return res.status(200).json(result);
-        })
-        .catch(err => {
-            res.statusMessage = "Error with the database";
-            return res.status(500).end();
-        });
-});
 
 //////////////////////////////////////////////////////////////
 //Operations for friend managment and summary managment
@@ -647,6 +626,45 @@ app.post('/userSummary', (req, res) => {
         });
 });
 
+//Save summary from other user
+app.post('/userSaveSummary', (req, res) => {
+    let userName = req.query.userName;
+    let querySummary = req.query.summaryId;
+    if (!userName) {
+        res.statusMesagge = "Missing user field";
+        return res.status(406).end();
+    }
+    if (!querySummary) {
+        res.statusMesagge = "Missing Id of summary";
+        return res.status(406).end();
+    }
+    summaries
+        .getSummary({id : summaryId})
+        .then(result => {
+            if (result.length === 0) {
+                res.statusMesagge = `Summary not found`;
+                return res.status(404).end();
+            }
+            result[0].summaryCreator = userName;
+            result[0].share = ["Private"];
+            return summaries
+                .updateSummary({ id: summaryId }, result[0])
+                .then(patched => {
+                    return res.status(202).json(patched);
+                })
+                .catch(err => {
+                    res.statusMessage = "Error with the database" + err.message;
+                    return res.status(500).end();
+                });
+        })
+        .catch(err => {
+            console.log("This is the parent error");
+            res.statusMessage = "Error with the database" + err.message;
+            return res.status(500).end();
+        });
+});
+
+
 //Delete a summary from a user
 app.delete('/userSummary', (req, res) => {
     let userName = req.query.userName;
@@ -667,7 +685,7 @@ app.delete('/userSummary', (req, res) => {
                 return res.status(404).end();
             }
             console.log(mainUser[0]);
-            let index = mainUser[0].summaryList.find(querySummary);
+            let index = mainUser[0].summaryList.indexOf(querySummary);
             if (index == -1) {
                 res.statusMessage = "Summary not found";
                 return res.status(404).end();
@@ -822,18 +840,17 @@ app.post('/summary', jsonParser, (req, res) => {
         });
 });
 
-app.delete('/summaries/:summaryId', (req, res) => {
-    let summaryId = req.params.summaryId;
-    console.log(summaryId)
+app.delete('/summary', (req, res) => {
+    let summaryId = req.query.summaryId;
     if (!summaryId) {
-        res.statusMessage = "Missing summaryId";
+        res.statusMesagge = "Missing Id of summary";
         return res.status(406).end();
     }
     summaries
-        .deleteSummary({ summaryId })
+        .deleteSummary({ id: summaryId })
         .then(result => {
             if (result.deletedCount === 0) {
-                res.statusMessage = "The summary was not found. Critical Error";
+                res.statusMessage = "The summary was not found.";
                 return res.status(404).end();
             }
             return res.status(200).json(result);
@@ -844,15 +861,14 @@ app.delete('/summaries/:summaryId', (req, res) => {
         });
 });
 
-app.patch('/users/:summaryId', jsonParser, (req, res) => {
-    console.log(req.body);
+app.patch('/summary', jsonParser, (req, res) => {
     let { id, summaryCreator, summaryName, summarySource, summaryTags, share, summary  } = req.body;
-    let paramsId = req.params.summaryId;
-    if (!paramsId) {
+    let summaryId = req.query.summaryId;
+    if (!summaryId) {
         res.statusMessage = "SummaryId was not sent in request";
         return res.status(406).end();
     }
-    if (id !== paramsId) {
+    if (id !== summaryId) {
         res.statusMessage = "The ids do not match";
         return res.status(409).end();
     }

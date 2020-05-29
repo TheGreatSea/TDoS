@@ -171,3 +171,29 @@ footer{
     background-color: #1A1A1A;
     color: white;
 }
+
+
+@media(min-width: 600px) and (max-width:990px){
+    #population{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+  }
+
+
+@media (max-width:599px){
+    #population{
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    input{
+        margin-left: 5%;
+        width: 50%;
+    }
+    li{
+        float : left;
+        padding : 10px;
+    }
+}

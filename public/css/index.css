@@ -57,6 +57,8 @@ section{
 }
 
 table{
+    display: flex;
+    flex-direction: column;
     width: 100%;
     background-color: #1A1A1A;
     border : 0px;
@@ -65,9 +67,21 @@ table{
 }
  
 td, th{
-    margin: 10px;
+    margin: auto;
     padding: 10px;
     border :0px solid #f4f4f4;
+}
+
+thead{
+    display: flex;
+    justify-content: center;
+}
+
+tfoot{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 button{

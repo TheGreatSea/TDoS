@@ -91,13 +91,22 @@
     },
     getSummaryFeed: function(userName) {
         return summariesCollection
-            .find({share: { $all : ["public", userName] } } )
-            .then(secondaryFeed => {
+            .find({share: { $all : [userName] } } )
+            .then(friendFeed => {
+                //return secondaryFeed;
                 return summariesCollection
-                    .find({summaryCreator : userName})
-                    .then(foundSummary => {
-                        let array = secondaryFeed.concat(foundSummary);
-                        return array;
+                    .find({share: { $all : ["public"] } })
+                    .then(publicFeed => {
+                        return summariesCollection
+                            .find({summaryCreator : userName, share: ["private"]} )
+                            .then(privateFeed => {
+                                let array = friendFeed.concat(publicFeed);
+                                array = array.concat(privateFeed);
+                                return array;
+                            })
+                            .catch(err => {
+                                return err;
+                            });
                     })
                     .catch(err => {
                         return err;

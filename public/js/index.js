@@ -10,7 +10,6 @@ let next_btn = document.querySelector('#next');
 
 let public_feed = [];
 let filered_feed = [];
-let filter = false;
 
 let feed = [];
 
@@ -72,7 +71,7 @@ function getPublicFeed(){
 
 function generateFeed(){ 
     if (feed != 0){
-        if(feed.length < 10){
+        if(feed.length <= 10){
             first_position = 0;
             last_position = feed.length;
             document.getElementById("prev").classList.add("hidden");
