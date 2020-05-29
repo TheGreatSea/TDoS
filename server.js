@@ -407,13 +407,13 @@ app.post('/userFriend', (req, res) => {
                 })
                 .catch(err => {
                     console.log("This is the child error");
-                    res.statusMessage = "Error with the database";
+                    res.statusMessage = "Error with the database. Could not add friend.";
                     return res.status(500).end();
                 });
         })
         .catch(err => {
             console.log("This is the parent error")
-            res.statusMessage = "Error with the database";
+            res.statusMessage = "Error with the database. Could not add friend.";
             return res.status(500).end();
         });
 });
@@ -466,7 +466,7 @@ app.patch('/userFriend', (req, res) => {
         });
 });
 
-//Add friend to the summaries shared with friends
+//Share summaries with new friend
 app.patch('/shareToFriend', (req, res) => {
     let userName = req.query.userName;
     let queryfriendName = req.query.friendName;
@@ -479,21 +479,35 @@ app.patch('/shareToFriend', (req, res) => {
         return res.status(406).end();
     }
     summaries
-        .getSummarybyCreator(creatorId)
+        .getTwoSummaries(userName, queryfriendName)
         .then(result => {
             if (result.length === 0) {
-                res.statusMesagge = `${creatorId} summaries not found`;
+                res.statusMesagge = `Summaries not found`;
                 return res.status(404).end();
             }
-            for(let i = 0; i < result.length;i++){
-                if (result[i].share[0] == "Friends"){
-                    result[i].share.push(String(queryfriendName));
+            for(let i = 0; i < result.length ; i++){
+                if (result[i].share[0] == "friends"){
+                    if(result[i].summaryCreator ==  userName){
+                        result[i].share.push(String(queryfriendName));
+                    }
+                    else if(result[i].summaryCreator ==  queryfriendName){
+                        result[i].share.push(String(userName));
+                    }
+                    summaries
+                        .updateSummary({id : result[i].id},result[i])
+                            .then(result => {
+                                console.log(result);
+                            })
+                            .catch(err => {
+                                res.statusMessage = "Error with the database";
+                                return res.status(500).end();
+                            });      
                 }
             }
             return res.status(200).json(result);
         })
         .catch(err => {
-            res.statusMessage = "Error with the database";
+            res.statusMessage = "Error with the database" + err.message;
             return res.status(500).end();
         });
 });
@@ -690,16 +704,16 @@ app.get('/summaryByCreator', (req, res) => {
 });
 
 app.get('/summaryFeed', (req, res) => {
-    let userId = req.query.userId;
-    if (!userId) {
-        res.statusMesagge = "UserId is required";
+    let userName = req.query.userName;
+    if (!userName) {
+        res.statusMesagge = "userName is required";
         return res.status(406).end();
     }
     summaries
-        .getSummaryFeed(userId)
+        .getSummaryFeed(userName)
         .then(result => {
             if (result.length === 0) {
-                res.statusMesagge = `${userId} feed not found`;
+                res.statusMesagge = `${userName} feed not found`;
                 return res.status(404).end();
             }
             return res.status(200).json(result);

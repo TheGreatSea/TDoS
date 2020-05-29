@@ -3,6 +3,7 @@ const API_KEY = '2abbf7c3-245b-404f-9473-ade729ed4653';
 console.log("Page start")
 let userName = "";
 let id = "";
+let friendList = [];
 
 function validate(){
     let url = `/users/validate-token`;
@@ -23,6 +24,7 @@ function validate(){
         .then(responseJSON =>{
             userName = responseJSON.userName;
             id = responseJSON.id;
+            friendList = responseJSON.friendList;
             console.log(responseJSON);
         })
         .catch( err => {
@@ -119,6 +121,8 @@ function createSummary(){
             break;
         }
     }
+    if (share[0] == "friends")
+        share = share.concat(friendList);
     let summaryobj = {
         summaryCreator: userName,
         summaryName: title,

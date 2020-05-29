@@ -71,11 +71,37 @@
                 return err;
             });
     },
-    getSummaryFeed: function(userId) {
+    getTwoSummaries: function(userName1, userName2 ) {
         return summariesCollection
-            .find({share: { $all : ["public", userId] } } )
-            .then(foundSummary => {
-                return foundSummary;
+            .find({summaryCreator : userName1})
+            .then(firstSummary => {
+                return summariesCollection
+                    .find({summaryCreator : userName2})
+                    .then(secondSummary => {
+                        let array = firstSummary.concat(secondSummary);
+                        return array;
+                    })
+                    .catch(err => {
+                        return err;
+                    });
+            })
+            .catch(err => {
+                return err;
+            });
+    },
+    getSummaryFeed: function(userName) {
+        return summariesCollection
+            .find({share: { $all : ["public", userName] } } )
+            .then(secondaryFeed => {
+                return summariesCollection
+                    .find({summaryCreator : userName})
+                    .then(foundSummary => {
+                        let array = secondaryFeed.concat(foundSummary);
+                        return array;
+                    })
+                    .catch(err => {
+                        return err;
+                    });
             })
             .catch(err => {
                 return err;
@@ -113,7 +139,7 @@
     },
     updateSummary: function(summaryId, summaryChanges) {
          return summariesCollection
-             .update(summaryId, summaryChanges)
+             .updateOne(summaryId, summaryChanges)
              .then(updatedSummary => {
                  return updatedSummary;
              })
