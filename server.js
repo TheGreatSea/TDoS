@@ -5,7 +5,6 @@ const uuid = require('uuid');
 const morgan = require('morgan');
 const authorization = require('./middleware/authorization');
 const app = express();
-const morgan = require('morgan');
 
 const cors = require('./middleware/cors');
 const { DATABASE_URL, PORT, SECRET_TOKEN } = require('./config');
