@@ -302,6 +302,8 @@ function watchNav(){
 }
 
 function init() {
+    watchDoSummaryButton()
+    watchGetSummaryButton()
     watchNav();
     watchCreateButton()
     watchAddTag();
