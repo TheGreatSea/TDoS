@@ -213,6 +213,7 @@ app.post('/users/register', jsonParser, (req, res) => {
 app.post('/users/changePassword',jsonParser, (req, res) =>{
     console.log("Changing password");
     console.log("Body ", req.body);
+    
     let { userName, newPassword } = req.body;
     if (!userName || !newPassword ) {
         res.statusMessage = "Missing Fields";
